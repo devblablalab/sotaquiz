@@ -1,0 +1,15 @@
+<div class="audio-player">
+    <div class="action-play-pause hover-opacity" (click)="toggleStateAudio()">
+        <div *ngIf="isPlaying; else elseBlock">
+            <i-audio-pause (click)="pauseAudio()"></i-audio-pause>
+        </div>  
+        <ng-template #elseBlock>
+            <i-audio-play (click)="playAudio()"></i-audio-play>
+        </ng-template>
+    </div>
+    <input class="duration-slider" (input)="seekTo($event)" value="0" type="range">
+    <div class="volume hover-opacity">
+        <i-audio-volume></i-audio-volume>
+        <input class="volume-slider" (input)="setVolume($event)" type="range">
+    </div>
+</div>

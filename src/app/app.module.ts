@@ -21,6 +21,10 @@ import * as firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 import { environment } from '../environments/environment';
+import { AudioPlayerComponent } from './components/audio-player/audio-player.component';
+import { AudioVolumeIcon } from './components/icons/normal/audio/volume.component';
+import { AudioPlayIcon } from './components/icons/normal/audio/play.component';
+import { AudioPauseIcon } from './components/icons/normal/audio/pause.component';
 
 
 @NgModule({
@@ -38,7 +42,11 @@ import { environment } from '../environments/environment';
     ShapeContentComponent,
     ConfirmQuizComponent,
     ResultComponent,
-    ShareComponent
+    ShareComponent,
+    AudioPlayerComponent,
+    AudioVolumeIcon,
+    AudioPlayIcon,
+    AudioPauseIcon
   ],
   imports: [
     BrowserModule,

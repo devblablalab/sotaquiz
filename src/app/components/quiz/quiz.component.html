@@ -5,9 +5,7 @@
         <p class="question-text">De que estado <br> é esse sotaque?</p>
     </div>
     <div class="d-flex justify-center align-items-center">
-        <audio class="audio-question" controls loop>
-            <source [src]="'assets/audiotest' + currentQuestion + '.ogg?v=' + currentQuestion * 100" type="audio/ogg">
-        </audio>
+        <audio-player></audio-player>
     </div>
     <p class="title-muted">Selecione uma opção</p>
     <div class="quiz-actions">

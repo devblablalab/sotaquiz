@@ -1,5 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { collection, getFirestore } from 'firebase/firestore';
+import { AudioService } from 'src/app/services/audio.service';
 import { QuizService } from 'src/app/services/quiz.service';
 
 @Component({
@@ -14,7 +15,7 @@ export class QuizComponent implements OnInit {
   public isMaxQuestion : boolean = false;
   public listOfSelectedQuestion : Array<Object> = [];
 
-  constructor(private service : QuizService) {}
+  constructor(private service : QuizService, private audioService : AudioService) {}
 
   async ngOnInit()  {
     this.ufList = await this.service.setDataUfs();
@@ -49,12 +50,14 @@ export class QuizComponent implements OnInit {
 
   prevQuestion() : void {
     this.currentQuestion--;
+    this.audioService.changeAudioSrc('teste');
     this.checkQuestionStatus();
   }
 
   nextQuestion() : void {
     this.checkActiveAndSetAsData();
     this.currentQuestion++;
+    this.audioService.changeAudioSrc('teste');
     this.checkQuestionStatus();
   }
 

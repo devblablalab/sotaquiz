@@ -1,0 +1,67 @@
+@import '/src/styles.scss';
+
+@mixin track {
+    height: 1.5rem;
+    background: $light;
+    border-radius: 16px;
+}
+
+@mixin range-thumb {
+    appearance: none; 
+    height: 1.5rem;
+    width: 1.5rem;
+    background-color: $light;
+    border-radius: 50%;
+    border: 2px solid $primary;
+    box-shadow: -407px 0 0 400px $primary;
+}
+
+.audio-player {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin: 1rem;
+
+    .action-play-pause,
+    .volume {
+        cursor: pointer;
+    }
+
+    input[type="range"] {
+        -webkit-appearance: none;
+        appearance: none; 
+        width: 100%;
+        cursor: pointer;
+        outline: none;
+        overflow: hidden;
+        border-radius: 16px;
+    }
+
+    .volume {
+        position: relative;
+        input[type="range"].volume-slider {
+            transform: rotateZ(270deg);
+            position: absolute;
+            left: 0;
+            top: -2rem;
+            display:none;
+        }
+    }
+    
+    input[type="range"]::-webkit-slider-runnable-track {
+        @include track();
+    }
+
+    input[type="range"]::-moz-range-track {
+        @include track();
+    }
+    
+    input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        @include range-thumb();
+    }
+
+    input[type="range"]::-moz-range-thumb {
+        @include range-thumb();
+    }
+}
