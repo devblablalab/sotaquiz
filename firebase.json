@@ -1,0 +1,9 @@
+{
+  "hosting": [
+    {
+      "target": "sotaquiz",
+      "source": ".",
+      "frameworksBackend": {}
+    }
+  ]
+}

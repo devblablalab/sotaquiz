@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { collection, getFirestore } from 'firebase/firestore';
 import { QuizService } from 'src/app/services/quiz.service';
 
 @Component({
@@ -7,15 +8,16 @@ import { QuizService } from 'src/app/services/quiz.service';
   styleUrls: ['./quiz.component.scss']
 })
 export class QuizComponent implements OnInit {
-  public ufList : Array<string> = [];
+  public ufList : any = [];
   public currentQuestion : number = 1;
   public audioUfSrc : string = `assets/audiotest${this.currentQuestion}.ogg`;
   public isMaxQuestion : boolean = false;
   public listOfSelectedQuestion : Array<Object> = [];
+
   constructor(private service : QuizService) {}
 
-  ngOnInit(): void {
-      this.ufList = this.service.getUfOptions();
+  async ngOnInit()  {
+    this.ufList = await this.service.setDataUfs();
   }
 
   checkQuestionStatus() : void {

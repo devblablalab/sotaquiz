@@ -1,21 +1,27 @@
 import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { AppRoutingModule } from './modules/app-routing.module';
+import { ConfirmQuizComponent } from './components/confirm-quiz/confirm-quiz.component';
+import { BrandComponent } from './components/header/brand/brand.component';
 import { HeaderComponent } from './components/header/header.component';
 import { LogoComponent } from './components/header/logo/logo.component';
-import { BrandComponent } from './components/header/brand/brand.component';
 import { HomeComponent } from './components/home/home.component';
-import { QuizComponent } from './components/quiz/quiz.component';
-import { UserRoundedBoldIcon } from './components/icons/bold/user/user-rounded.component';
 import { UserBorderedBoldIcon } from './components/icons/bold/user/user-bordered.component';
+import { UserRoundedBoldIcon } from './components/icons/bold/user/user-rounded.component';
 import { UserSquareBoldIcon } from './components/icons/bold/user/user-square.component';
-import { ShapeContentComponent } from './components/shape-content/shape-content.component';
-import { ConfirmQuizComponent } from './components/confirm-quiz/confirm-quiz.component';
-import { UserRoundedIcon } from './components/icons/normal/user/user-rounded.component';
-import { ResultComponent } from './components/result/result.component';
 import { ShareComponent } from './components/icons/normal/share/share.component';
+import { UserRoundedIcon } from './components/icons/normal/user/user-rounded.component';
+import { QuizComponent } from './components/quiz/quiz.component';
+import { ResultComponent } from './components/result/result.component';
+import { ShapeContentComponent } from './components/shape-content/shape-content.component';
+import { AppRoutingModule } from './modules/app-routing.module';
+import * as firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore';
+import { environment } from '../environments/environment';
+
 
 @NgModule({
   declarations: [
@@ -36,9 +42,15 @@ import { ShareComponent } from './components/icons/normal/share/share.component'
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
   ],
-  providers: [],
+  providers: [
+  ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor() {
+    firebase.initializeApp(environment.firebase);
+  }
+ }
