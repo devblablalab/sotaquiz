@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Subscription, interval } from 'rxjs';
 import { AudioService } from 'src/app/services/audio.service';
 
@@ -8,6 +8,7 @@ import { AudioService } from 'src/app/services/audio.service';
   styleUrls: ['./audio-player.component.scss']
 })
 export class AudioPlayerComponent implements OnInit, OnDestroy {
+  @Input() audioLetter : string = '';
   public isPlaying : boolean = false;
   public volumeIsOpen : boolean = false;
   public currentTime: number = 0;
@@ -62,7 +63,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
 
   public seekTo(e: Event) {
     const { currentTarget } = e;
-    if (this.audioPlayer && currentTarget instanceof HTMLInputElement) {
+    if (this.audioPlayer.src && currentTarget instanceof HTMLInputElement) {
       const seekTime = (Number(currentTarget.value) / 100) * this.audioPlayer.duration;
       this.audioPlayer.currentTime = seekTime;
     }

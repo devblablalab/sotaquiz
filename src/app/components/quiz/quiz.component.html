@@ -1,13 +1,13 @@
 <div class="quiz-container d-flex flex-col align-items-center">
     <app-header shapeSrc="assets/shapes/border-box.svg"></app-header>
-    <div class="question-page-subtitle">{{ currentQuestion}}/{{ ufList.length }}</div>
-    <div class="d-flex justify-center align-items-center">
+    <div class="d-flex flex-col justify-center align-items-center">
+        <div class="question-page-subtitle">{{ currentQuestion}}/{{ ufList.length }}</div>
         <p class="question-text">De que estado <br> é esse sotaque?</p>
     </div>
     <div class="d-flex justify-center align-items-center">
-        <audio-player></audio-player>
+        <audio-player [audioLetter]="listOfLetters[currentQuestion]"></audio-player>
     </div>
-    <p class="title-muted">Selecione uma opção</p>
+    <p class="title-muted mt-4">Selecione uma opção</p>
     <div class="quiz-actions">
         <button (click)="prevQuestion()" class="btn-default bg-light hover-opacity" type="button">
             <img src="assets/icons/arrow-left.svg" alt="">

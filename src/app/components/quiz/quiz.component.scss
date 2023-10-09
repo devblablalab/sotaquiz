@@ -1,32 +1,19 @@
 @import '/src/styles.scss';
 
-.quiz-container {
-    .audio-question {
-        margin: 4rem 0;
-        text-align: center;
-        border: none;
-        background: none;
-        &::-webkit-media-controls-panel {
-            // background-color: $dark;
-        }
-        &::-webkit-media-controls-play-button {
-            // background-color: $dark;
-        }
-        &::-webkit-media-controls-start-playback-button {
-            background-color: blue;
-        }
-    }
-
+.quiz-container {   
     .quiz-actions {
         display: flex;
         justify-content: space-between;
         gap: 2rem;
         align-items: flex-start;
-        margin-top: 1rem;
+        margin-top: 2rem;
         .ufs {
             display: grid;
-            grid-template-columns: repeat(5,1fr);
+            grid-template-columns: repeat(9,1fr);
             gap: 0.8rem;
+            @media screen and (max-width:767px) {
+                grid-template-columns: repeat(5,1fr);
+            }
             @media screen and (max-width:420px) {
                 grid-template-columns: repeat(3,1fr);
             }

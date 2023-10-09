@@ -10,12 +10,15 @@ import { QuizService } from 'src/app/services/quiz.service';
 })
 export class QuizComponent implements OnInit {
   public ufList : any = [];
+  public listOfLetters : Array<string> = [];
   public currentQuestion : number = 1;
   public audioUfSrc : string = `assets/audiotest${this.currentQuestion}.ogg`;
   public isMaxQuestion : boolean = false;
   public listOfSelectedQuestion : Array<Object> = [];
 
-  constructor(private service : QuizService, private audioService : AudioService) {}
+  constructor(private service : QuizService, private audioService : AudioService) {
+    this.listOfLetters = this.service.listOfLetters;
+  }
 
   async ngOnInit()  {
     this.ufList = await this.service.setDataUfs();

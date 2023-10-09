@@ -3,6 +3,7 @@
 @mixin track {
     height: 1.5rem;
     background: $light;
+    border: none;
     border-radius: 16px;
 }
 
@@ -21,7 +22,7 @@
     align-items: center;
     gap: 2rem;
     width: 100%;
-    margin: 1rem;
+    margin: 2rem 0;
 
     .action-play-pause,
     .volume > * {

@@ -1,4 +1,4 @@
-<div class="audio-player">
+<div class="audio-player" [attr.data-letter]="audioLetter">
     <div class="action-play-pause hover-opacity" (click)="toggleStateAudio()">
         <div *ngIf="isPlaying; else elseBlock">
             <i-audio-pause (click)="pauseAudio()"></i-audio-pause>
