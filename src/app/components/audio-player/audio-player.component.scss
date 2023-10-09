@@ -20,10 +20,11 @@
     display: flex;
     align-items: center;
     gap: 2rem;
+    width: 100%;
     margin: 1rem;
 
     .action-play-pause,
-    .volume {
+    .volume > * {
         cursor: pointer;
     }
 
@@ -45,6 +46,9 @@
             left: 0;
             top: -2rem;
             display:none;
+        }
+        input[type="range"].volume-slider.open {
+            display:block;
         }
     }
     

@@ -9,6 +9,7 @@ import { AudioService } from 'src/app/services/audio.service';
 })
 export class AudioPlayerComponent implements OnInit, OnDestroy {
   public isPlaying : boolean = false;
+  public volumeIsOpen : boolean = false;
   public currentTime: number = 0;
   public volume = 50;
   public audioPlayer = new Audio();
@@ -23,17 +24,27 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.startUpdatingRangeslider();
+    document.addEventListener("click", (e) => this.handleDocumentVolumeClick(e));
   }
 
   ngOnDestroy() {
     this.stopUpdatingRangeslider();
+    document.removeEventListener("click", (e) => this.handleDocumentVolumeClick(e));
   }
 
-  toggleStateAudio() {
+  public toggleStateAudio() {
     this.isPlaying = !this.isPlaying;
   }
 
-  playAudio() {
+  public toggleStateVolume(e : Event) {
+    const volumeIcon = document.querySelector('.volume-icon');
+    const { target } = e;
+    if(target === volumeIcon || volumeIcon?.contains(target as Node)) {
+      this.volumeIsOpen = !this.volumeIsOpen;
+    }
+  }
+
+  public playAudio() {
     this.audioPlayer.src = this.service.getAudioSrc();
     this.audioPlayer.load();
     if (this.audioPlayer.paused) {
@@ -44,12 +55,12 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     this.audioPlayer.play();
   }
 
-  pauseAudio() {
+  public pauseAudio() {
     this.currentTime = this.audioPlayer.currentTime;
     this.audioPlayer.pause();
   }
 
-  seekTo(e: Event) {
+  public seekTo(e: Event) {
     const { currentTarget } = e;
     if (this.audioPlayer && currentTarget instanceof HTMLInputElement) {
       const seekTime = (Number(currentTarget.value) / 100) * this.audioPlayer.duration;
@@ -57,10 +68,20 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
     }
   }
 
-  setVolume(e: Event) {
+  public setVolume(e: Event) {
     const { currentTarget } = e;
     if (this.audioPlayer && currentTarget instanceof HTMLInputElement) {
       this.audioPlayer.volume = Number(currentTarget.value) / 100;
+    }
+  }
+
+  private handleDocumentVolumeClick(e: Event) {
+    const volumeIcon = document.querySelector('.volume-icon');
+    const { target } = e;
+    const targetElement = target as HTMLElement;
+
+    if (volumeIcon && !volumeIcon.contains(target as Node) && !targetElement?.classList.contains('volume-slider')) {
+      this.volumeIsOpen = false;
     }
   }
 

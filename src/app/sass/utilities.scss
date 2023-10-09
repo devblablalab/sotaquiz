@@ -146,6 +146,10 @@
     opacity: .6;
 }
 
+.hover-svg-primary:hover {
+    fill: $primary!important;
+}
+
 .question-page-subtitle {
     font-size: 1.6rem;
     font-weight: 600;

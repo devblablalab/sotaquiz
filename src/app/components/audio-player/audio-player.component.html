@@ -8,8 +8,8 @@
         </ng-template>
     </div>
     <input class="duration-slider" (input)="seekTo($event)" value="0" type="range">
-    <div class="volume hover-opacity">
-        <i-audio-volume></i-audio-volume>
-        <input class="volume-slider" (input)="setVolume($event)" type="range">
+    <div class="volume" (click)="toggleStateVolume($event)">
+        <i-audio-volume [iconFillColor]="volumeIsOpen ? '#F24AFF' : '#FFFF'"></i-audio-volume>
+        <input class="volume-slider" [class.open]="volumeIsOpen" (input)="setVolume($event)" value="50" min="0" max="100" type="range">
     </div>
 </div>
