@@ -1,0 +1,13 @@
+@import '/src/styles.scss';
+
+.main-header {
+    min-width: 40rem;
+    @media screen and (max-width:420px) {
+        min-width: 28rem;
+    }
+    .brand {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}

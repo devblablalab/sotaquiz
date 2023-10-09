@@ -1,0 +1,34 @@
+<div class="quiz-container d-flex flex-col align-items-center">
+    <app-header shapeSrc="assets/shapes/border-box.svg"></app-header>
+    <div class="question-page-subtitle">{{ currentQuestion}}/{{ ufList.length }}</div>
+    <div class="d-flex justify-center align-items-center">
+        <p class="question-text">De que estado <br> é esse sotaque?</p>
+    </div>
+    <div class="d-flex justify-center align-items-center">
+        <audio class="audio-question" controls loop>
+            <source [src]="'assets/audiotest' + currentQuestion + '.ogg?v=' + currentQuestion * 100" type="audio/ogg">
+        </audio>
+    </div>
+    <p class="title-muted">Selecione uma opção</p>
+    <div class="quiz-actions">
+        <button (click)="prevQuestion()" class="btn-default bg-light hover-opacity" type="button">
+            <img src="assets/icons/arrow-left.svg" alt="">
+        </button>
+        <div class="ufs">
+            <button (click)="toggleUfOptions($event)" *ngFor="let uf of ufList" class="btn-default text-light border-light bg-none" type="button" 
+            [attr.data-uf]="uf.toLowerCase()" data-question="0">
+                {{ uf }}
+            </button>
+        </div>
+        <button (click)="nextQuestion()" class="btn-default bg-light hover-opacity" type="button" [disabled]="isMaxQuestion">
+            <img src="assets/icons/arrow-right.svg" alt="">
+        </button>
+    </div>
+    <div class="d-flex align-items-center justify-center mt-2" *ngIf="isMaxQuestion">
+        <a routerLink="/confirm-quiz">
+            <button class="btn-default send-quiz" type="button">
+                Enviar
+            </button>
+        </a>
+    </div>
+</div>  

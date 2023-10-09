@@ -1,0 +1,18 @@
+#brand-shape {
+    width: 24rem;
+}
+
+#message-text {
+    width: 27rem;
+    margin-left: 3.5rem;
+    padding-left: 6.5rem;
+}
+
+#button-start {
+    width: 20rem;
+    margin-top: 4rem;
+    cursor: pointer;
+    &:hover {
+        filter: opacity(.7)
+    }
+}

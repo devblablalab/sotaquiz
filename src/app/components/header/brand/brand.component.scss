@@ -1,0 +1,16 @@
+@import '/src/styles.scss';
+
+.brand-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: $shapeWidth;
+    min-height: $shapeHeight;
+    img.shape {
+        position: absolute;
+    }
+    .content {
+        z-index: 1;
+    }
+}

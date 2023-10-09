@@ -1,0 +1,10 @@
+@import '/src/styles.scss';
+
+.share {
+    cursor: pointer;
+    &:hover {
+        path {
+            fill: $light;
+        }
+    }
+}

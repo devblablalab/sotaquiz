@@ -1,0 +1,10 @@
+@import '/src/styles.scss';
+
+.result-container {
+    .result-count {
+        font-size:9rem;
+        font-weight: 900;
+        color: $warning;
+        margin-top: .9rem;
+    }
+}
