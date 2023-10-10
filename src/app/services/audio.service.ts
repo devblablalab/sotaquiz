@@ -8,11 +8,11 @@ export class AudioService {
 
   constructor() { }
 
-  changeAudioSrc(letter : string) {
+  public changeAudioSrc(letter : string) {
     this.audioSrc = `assets/audio-quiz/sotaquiz-${letter}.ogg`;;
   }
 
-  getAudioSrc() {
+  public getAudioSrc() {
     return this.audioSrc;
   }
 }

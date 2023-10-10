@@ -25,7 +25,7 @@ export class QuizComponent implements OnInit {
     this.ufList = await this.service.setDataUfs();
   }
 
-  checkQuestionStatus() : void {
+  private checkQuestionStatus() : void {
     if(this.currentQuestion >= this.ufList.length) {
       this.isMaxQuestion = true;
     } else {
@@ -37,7 +37,7 @@ export class QuizComponent implements OnInit {
     }
   }
 
-  checkActiveAndSetAsData() : void {
+  private checkActiveAndSetAsData() : void {
     if(this.currentQuestion === 0) {
       const firstSelected = document.querySelector('.active-uf') as HTMLButtonElement;
       firstSelected.dataset['question']= this.currentQuestion.toString();
@@ -53,20 +53,20 @@ export class QuizComponent implements OnInit {
     }
   }
 
-  prevQuestion() : void {
+  public prevQuestion() : void {
     this.currentQuestion--;
     this.audioService.changeAudioSrc(this.listOfLetters[this.currentQuestion]);
     this.checkQuestionStatus();
   }
 
-  nextQuestion() : void {
+  public nextQuestion() : void {
     this.checkActiveAndSetAsData();
     this.currentQuestion++;
     this.audioService.changeAudioSrc(this.listOfLetters[this.currentQuestion]);
     this.checkQuestionStatus();
   }
 
-  maintainingOneUf() : void {
+  private maintainingOneUf() : void {
     const resetedButtons = Array.from(document.querySelectorAll('[data-question="0"].active-uf')) as HTMLButtonElement[];
     const changedButtonsInQuestion = Array.from(document.querySelectorAll(`[data-question="${this.currentQuestion}"]`)) as HTMLButtonElement[];
     const elementsToReset = new Set([...resetedButtons, ...changedButtonsInQuestion]);
@@ -79,9 +79,17 @@ export class QuizComponent implements OnInit {
     });
   }
 
-  toggleUfOptions(e: Event): void {
+  
+
+  public toggleUfOptions(e: Event): void {
     const currentTarget = e.currentTarget as HTMLElement;
     this.maintainingOneUf();
     currentTarget.classList.add('active-uf');
+  }
+
+  public sendQuiz() {
+    const answersValidatedList = this.service.getQuestionAnswersList();
+    const answersBtns = document.querySelectorAll('[data-letter-answer].active-uf');
+    const dataToSend = this.service.getQuizDataToSendOfBtns(Array.from(answersBtns) as HTMLButtonElement[]);
   }
 }
