@@ -12,12 +12,13 @@ export class QuizComponent implements OnInit {
   public ufList : any = [];
   public listOfLetters : Array<string> = [];
   public currentQuestion : number = 1;
-  public audioUfSrc : string = `assets/audiotest${this.currentQuestion}.ogg`;
+  public audioUfSrc : string = '';
   public isMaxQuestion : boolean = false;
   public listOfSelectedQuestion : Array<Object> = [];
 
   constructor(private service : QuizService, private audioService : AudioService) {
     this.listOfLetters = this.service.listOfLetters;
+    this.audioService.changeAudioSrc(this.listOfLetters[this.currentQuestion]);
   }
 
   async ngOnInit()  {
@@ -25,7 +26,6 @@ export class QuizComponent implements OnInit {
   }
 
   checkQuestionStatus() : void {
-    this.audioUfSrc = `assets/audiotest${this.currentQuestion}.ogg`;
     if(this.currentQuestion >= this.ufList.length) {
       this.isMaxQuestion = true;
     } else {
@@ -41,11 +41,13 @@ export class QuizComponent implements OnInit {
     if(this.currentQuestion === 0) {
       const firstSelected = document.querySelector('.active-uf') as HTMLButtonElement;
       firstSelected.dataset['question']= this.currentQuestion.toString();
+      firstSelected.dataset['letterAnswer']= this.listOfLetters[this.currentQuestion];
       firstSelected.disabled = true;
     } else {
       const lastSelected = document.querySelector('[data-question="0"].active-uf') as HTMLButtonElement;
       if(lastSelected) {
         lastSelected.dataset['question']= this.currentQuestion.toString();
+        lastSelected.dataset['letterAnswer']= this.listOfLetters[this.currentQuestion];
         lastSelected.disabled = true;
       }
     }
@@ -53,14 +55,14 @@ export class QuizComponent implements OnInit {
 
   prevQuestion() : void {
     this.currentQuestion--;
-    this.audioService.changeAudioSrc('teste');
+    this.audioService.changeAudioSrc(this.listOfLetters[this.currentQuestion]);
     this.checkQuestionStatus();
   }
 
   nextQuestion() : void {
     this.checkActiveAndSetAsData();
     this.currentQuestion++;
-    this.audioService.changeAudioSrc('teste');
+    this.audioService.changeAudioSrc(this.listOfLetters[this.currentQuestion]);
     this.checkQuestionStatus();
   }
 
@@ -73,6 +75,7 @@ export class QuizComponent implements OnInit {
       active.classList.remove('active-uf');
       active.dataset['question'] = '0';
       active.disabled = false;
+      if(active.dataset['letterAnswer']) active.removeAttribute('data-letter-answer');
     });
   }
 

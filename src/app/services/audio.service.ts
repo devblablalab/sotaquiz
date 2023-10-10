@@ -4,12 +4,12 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class AudioService {
-  private audioSrc : string = 'assets/audiotest1.ogg';
+  private audioSrc : string = '';
 
   constructor() { }
 
-  changeAudioSrc(src : string) {
-    this.audioSrc = src;
+  changeAudioSrc(letter : string) {
+    this.audioSrc = `assets/audio-quiz/sotaquiz-${letter}.ogg`;;
   }
 
   getAudioSrc() {
