@@ -9,12 +9,15 @@ export class AudioService {
   public currentTime: number = 0;
   public volume = 50;
   public timeUpdateSubscription!: Subscription;
+  public isPlaying : boolean = false;
   public audioPlayer = new Audio();
 
   constructor() { }
 
   public changeAudioSrc(letter : string) {
     this.audioSrc = `assets/audio-quiz/sotaquiz-${letter}.ogg`;
+    this.audioPlayer.src = this.audioSrc;
+    this.audioPlayer.load();  
   }
 
   public getAudioSrc() {
@@ -26,8 +29,8 @@ export class AudioService {
   }
 
   public changeSrcAndResetAudioTime(letter: string) {
-    
     this.changeAudioSrc(letter);
+    this.isPlaying = false;
     this.resetAudioPlayerTime();
   }
 }

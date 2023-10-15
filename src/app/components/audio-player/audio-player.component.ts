@@ -12,10 +12,10 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   public isPlaying : boolean = false;
   public volumeIsOpen : boolean = false;
 
-  constructor(private service: AudioService) { 
+  constructor(public service: AudioService) { 
     this.service.audioPlayer.addEventListener('ended', () => {
       this.service.audioPlayer.currentTime = 0;
-      this.isPlaying = false;
+      this.service.isPlaying = false;
     });
   }
 
@@ -30,7 +30,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   public toggleStateAudio() {
-    this.isPlaying = !this.isPlaying;
+    this.service.isPlaying = !this.service.isPlaying;
   }
 
   public toggleStateVolume(e : Event) {
