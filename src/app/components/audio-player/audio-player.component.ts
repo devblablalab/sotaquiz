@@ -11,14 +11,10 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   @Input() audioLetter : string = '';
   public isPlaying : boolean = false;
   public volumeIsOpen : boolean = false;
-  public currentTime: number = 0;
-  public volume = 50;
-  public audioPlayer = new Audio();
-  private timeUpdateSubscription!: Subscription;
 
   constructor(private service: AudioService) { 
-    this.audioPlayer.addEventListener('ended', () => {
-      this.audioPlayer.currentTime = 0;
+    this.service.audioPlayer.addEventListener('ended', () => {
+      this.service.audioPlayer.currentTime = 0;
       this.isPlaying = false;
     });
   }
@@ -46,33 +42,33 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   public playAudio() {
-    this.audioPlayer.src = this.service.getAudioSrc();
-    this.audioPlayer.load();
-    if (this.audioPlayer.paused) {
-      this.audioPlayer.currentTime = this.currentTime;
+    this.service.audioPlayer.src = this.service.getAudioSrc();
+    this.service.audioPlayer.load();
+    if (this.service.audioPlayer.paused) {
+      this.service.audioPlayer.currentTime = this.service.currentTime;
     } else {
-      this.currentTime = 0;
+      this.service.currentTime = 0;
     }
-    this.audioPlayer.play();
+    this.service.audioPlayer.play();
   }
 
   public pauseAudio() {
-    this.currentTime = this.audioPlayer.currentTime;
-    this.audioPlayer.pause();
+    this.service.currentTime = this.service.audioPlayer.currentTime;
+    this.service.audioPlayer.pause();
   }
 
   public seekTo(e: Event) {
     const { currentTarget } = e;
-    if (this.audioPlayer.src && currentTarget instanceof HTMLInputElement) {
-      const seekTime = (Number(currentTarget.value) / 100) * this.audioPlayer.duration;
-      this.audioPlayer.currentTime = seekTime;
+    if (this.service.audioPlayer.src && currentTarget instanceof HTMLInputElement) {
+      const seekTime = (Number(currentTarget.value) / 100) * this.service.audioPlayer.duration;
+      this.service.audioPlayer.currentTime = seekTime;
     }
   }
 
   public setVolume(e: Event) {
     const { currentTarget } = e;
-    if (this.audioPlayer && currentTarget instanceof HTMLInputElement) {
-      this.audioPlayer.volume = Number(currentTarget.value) / 100;
+    if (this.service.audioPlayer && currentTarget instanceof HTMLInputElement) {
+      this.service.audioPlayer.volume = Number(currentTarget.value) / 100;
     }
   }
 
@@ -87,26 +83,26 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   private startUpdatingRangeslider() {
-    this.timeUpdateSubscription = interval(1100).subscribe(() => {
+    this.service.timeUpdateSubscription = interval(1100).subscribe(() => {
       this.updateRangeslider();
     });
   }
   
   private stopUpdatingRangeslider() {
-    if (this.timeUpdateSubscription) {
-      this.timeUpdateSubscription.unsubscribe();
+    if (this.service.timeUpdateSubscription) {
+      this.service.timeUpdateSubscription.unsubscribe();
     }
   }
 
   private updateRangeslider() {
     const durationSlider = document.querySelector('.duration-slider') as HTMLInputElement;
-    if (this.audioPlayer) {
-      const currentTime = this.audioPlayer.currentTime;
-      const duration = this.audioPlayer.duration;
+    if (this.service.audioPlayer) {
+      const currentTime = this.service.audioPlayer.currentTime;
+      const duration = this.service.audioPlayer.duration;
   
       if (!isNaN(duration)) {
         const progress = (currentTime / duration) * 100;
-        this.currentTime = currentTime;
+        this.service.currentTime = currentTime;
         durationSlider.value = progress.toString();
       }
     }

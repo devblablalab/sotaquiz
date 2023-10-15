@@ -15,7 +15,7 @@ export class QuizComponent implements OnInit {
   public audioUfSrc : string = '';
   public isMaxQuestion : boolean = false;
   public listOfSelectedQuestion : Array<Object> = [];
-
+  
   constructor(private service : QuizService, private audioService : AudioService) {
     this.listOfLetters = this.service.listOfLetters;
     this.audioService.changeAudioSrc(this.listOfLetters[this.currentQuestion]);
@@ -55,14 +55,14 @@ export class QuizComponent implements OnInit {
 
   public prevQuestion() : void {
     this.currentQuestion--;
-    this.audioService.changeAudioSrc(this.listOfLetters[this.currentQuestion]);
+    this.audioService.changeSrcAndResetAudioTime(this.listOfLetters[this.currentQuestion]);
     this.checkQuestionStatus();
   }
 
   public nextQuestion() : void {
     this.checkActiveAndSetAsData();
     this.currentQuestion++;
-    this.audioService.changeAudioSrc(this.listOfLetters[this.currentQuestion]);
+    this.audioService.changeSrcAndResetAudioTime(this.listOfLetters[this.currentQuestion]);
     this.checkQuestionStatus();
   }
 
@@ -78,8 +78,6 @@ export class QuizComponent implements OnInit {
       if(active.dataset['letterAnswer']) active.removeAttribute('data-letter-answer');
     });
   }
-
-  
 
   public toggleUfOptions(e: Event): void {
     const currentTarget = e.currentTarget as HTMLElement;
