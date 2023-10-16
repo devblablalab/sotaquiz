@@ -169,3 +169,18 @@
     text-align: center;
     color: $muted;
 }
+
+.ufs {
+    display: grid;
+    grid-template-columns: repeat(9,1fr);
+    gap: 0.8rem;
+    @media screen and (max-width:767px) {
+        grid-template-columns: repeat(5,1fr);
+    }
+    @media screen and (max-width:420px) {
+        grid-template-columns: repeat(3,1fr);
+    }
+    @media screen and (max-width:320px) {
+        grid-template-columns: repeat(2,1fr);
+    }
+}

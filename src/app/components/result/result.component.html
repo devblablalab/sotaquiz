@@ -2,7 +2,7 @@
     <app-header shapeSrc="assets/shapes/border-box.svg"></app-header>
     <div class="d-flex flex-col justify-center align-items-center gap-1 mt-4">
         <p class="question-text text-center">Você acertou</p>
-        <p class="result-count text-center">19</p>
+        <p class="result-count text-center">{{ correctAnswers.length }}</p>
         <p class="question-text text-center">dos 27 sotaques!</p>
     </div>
     <div class="d-flex justify-center align-items-center my-2">
@@ -14,4 +14,10 @@
         <i-user-bordered-bold iconFillColor="#3F3F3F"></i-user-bordered-bold>
     </div>
     <p class="title-muted">Suas respostas certas:</p>
+    <div class="ufs">
+        <button *ngFor="let uf of ufList" class="btn-default text-light border-light bg-none" [class.correct-uf]="checkUfItemIsCorrect(uf)" 
+        type="button">
+            {{ uf }}
+        </button>
+    </div>
 </div>

@@ -13,6 +13,7 @@ export class QuizService {
   private questionAnswersList : any = [];
   public ufCollection;
   public questionCollection;
+  public quizSendData : DataSendQuiz[] | [] = [];
 
   constructor() {
     this.ufCollection = collection(this.firestore, 'ufs');
@@ -78,8 +79,12 @@ export class QuizService {
     return array;
   }
 
-  public getQuizDataToSendOfBtns(btns : HTMLButtonElement[]) {
-    return btns.map(btn => {
+  public getCorrectAnswers() {
+    return this.quizSendData.filter(answer => answer.isCorrect);
+  }
+
+  public setQuizSendData(btns : HTMLButtonElement[]) {
+    this.quizSendData = btns.map(btn => {
       let { uf, letterAnswer } = btn.dataset;
       const correctAnswer = this.questionAnswersList.find((answer: { audioLetter: string | undefined; }) => answer.audioLetter === letterAnswer);
       return {
@@ -89,9 +94,8 @@ export class QuizService {
     });
   }
 
-  public sendStateCounters(data : DataSendQuiz[] | []) {
-    const correctAnswers = data.filter(answer => answer.isCorrect);
-    correctAnswers.forEach(async (answer) => {
+  public sendStateCounters() {
+    this.getCorrectAnswers().forEach(async (answer) => {
       if (answer && answer.answerValue) {
         const answerValueUppercase : string = answer.answerValue.toUpperCase();
         try {
