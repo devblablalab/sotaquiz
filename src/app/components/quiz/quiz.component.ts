@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
 import { DataSendQuiz } from 'src/app/interfaces/quiz';
 import { AudioService } from 'src/app/services/audio.service';
 import { QuizService } from 'src/app/services/quiz.service';
@@ -16,7 +16,11 @@ export class QuizComponent implements OnInit {
   public isMaxQuestion : boolean = false;
   public listOfSelectedQuestion : Array<Object> = [];
   
-  constructor(private service : QuizService, private audioService : AudioService) {
+  constructor(
+    private service : QuizService, 
+    private audioService : AudioService, 
+    private elementRef: ElementRef
+  ) {
     this.listOfLetters = this.service.listOfLetters;
     this.audioService.changeAudioSrc(this.listOfLetters[this.currentQuestion]);
   }
@@ -39,7 +43,7 @@ export class QuizComponent implements OnInit {
 
   private checkActiveAndSetAsData() : void {
     if(this.currentQuestion === 0) {
-      const firstSelected = document.querySelector('.active-uf') as HTMLButtonElement;
+      const firstSelected = this.elementRef.nativeElement.querySelector('.active-uf') as HTMLButtonElement;
       firstSelected.dataset['question']= this.currentQuestion.toString();
       firstSelected.dataset['letterAnswer']= this.listOfLetters[this.currentQuestion];
       firstSelected.disabled = true;
@@ -49,7 +53,7 @@ export class QuizComponent implements OnInit {
   }
 
   private setLastQuestionOptions() {
-    const lastSelected = document.querySelector('[data-question="0"].active-uf') as HTMLButtonElement;
+    const lastSelected = this.elementRef.nativeElement.querySelector('[data-question="0"].active-uf') as HTMLButtonElement;
     if(lastSelected) {
       lastSelected.dataset['question']= this.currentQuestion.toString();
       lastSelected.dataset['letterAnswer']= this.listOfLetters[this.currentQuestion];
@@ -71,9 +75,10 @@ export class QuizComponent implements OnInit {
   }
 
   private maintainingOneUf() : void {
-    const resetedButtons = Array.from(document.querySelectorAll('[data-question="0"].active-uf')) as HTMLButtonElement[];
-    const changedButtonsInQuestion = Array.from(document.querySelectorAll(`[data-question="${this.currentQuestion}"]`)) as HTMLButtonElement[];
+    const resetedButtons = this.elementRef.nativeElement.querySelectorAll('[data-question="0"].active-uf');
+    const changedButtonsInQuestion = this.elementRef.nativeElement.querySelectorAll(`[data-question="${this.currentQuestion}"]`);
     const elementsToReset = new Set([...resetedButtons, ...changedButtonsInQuestion]);
+
   
     elementsToReset.forEach((active : HTMLButtonElement) => {
       active.classList.remove('active-uf');
@@ -93,7 +98,7 @@ export class QuizComponent implements OnInit {
   }
 
   public sendQuiz() {
-    const answersBtns = document.querySelectorAll('[data-letter-answer].active-uf');
+    const answersBtns = this.elementRef.nativeElement.querySelectorAll('[data-letter-answer].active-uf');
     this.service.setQuizSendData(Array.from(answersBtns) as HTMLButtonElement[]);
     this.service.sendStateCounters();
     this.service.sendFinishQuiz();
