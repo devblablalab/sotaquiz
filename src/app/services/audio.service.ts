@@ -15,7 +15,7 @@ export class AudioService {
   constructor() { }
 
   public changeAudioSrc(letter : string) {
-    this.audioSrc = `assets/audio-quiz/sotaquiz-${letter}.ogg`;
+    this.audioSrc = `assets/audio-quiz/sotaquiz-${letter}.wav`;
     this.audioPlayer.src = this.audioSrc;
     this.audioPlayer.load();  
   }
