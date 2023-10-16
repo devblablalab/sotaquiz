@@ -96,5 +96,6 @@ export class QuizComponent implements OnInit {
     const answersBtns = document.querySelectorAll('[data-letter-answer].active-uf');
     this.service.setQuizSendData(Array.from(answersBtns) as HTMLButtonElement[]);
     this.service.sendStateCounters();
+    this.service.sendFinishQuiz();
   }
 }

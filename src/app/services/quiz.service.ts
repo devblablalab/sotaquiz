@@ -79,6 +79,32 @@ export class QuizService {
     return array;
   }
 
+  public async sendStartQuiz() {
+    try {
+      const docSnap = await getDocs(query(collection(this.firestore, 'usageData'), where('whoStarted', '>=', 0)));
+        if (docSnap.docs.length > 0) {
+          const docRef = doc(this.firestore, 'usageData', docSnap.docs[0].id);
+          const updateData = { ['whoStarted']: increment(1) };
+          await updateDoc(docRef, updateData);
+        }
+    } catch (error) {
+        return;
+    }
+  }
+
+  public async sendFinishQuiz() {
+    try {
+      const docSnap = await getDocs(query(collection(this.firestore, 'usageData'), where('whoFinished', '>=', 0)));
+        if (docSnap.docs.length > 0) {
+          const docRef = doc(this.firestore, 'usageData', docSnap.docs[0].id);
+          const updateData = { ['whoFinished']: increment(1) };
+          await updateDoc(docRef, updateData);
+        }
+    } catch (error) {
+        return;
+    }
+  }
+
   public getCorrectAnswers() {
     return this.quizSendData.filter(answer => answer.isCorrect);
   }
