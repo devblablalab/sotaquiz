@@ -1,5 +1,5 @@
-import { Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
-import { DataSendQuiz, QuestionCounters } from 'src/app/interfaces/quiz';
+import { Component, ElementRef, OnInit } from '@angular/core';
+import { QuestionCounters } from 'src/app/interfaces/quiz';
 import { AudioService } from 'src/app/services/audio.service';
 import { QuizService } from 'src/app/services/quiz.service';
 
@@ -23,7 +23,7 @@ export class QuizComponent implements OnInit {
     private elementRef : ElementRef
   ) {
     this.listOfLetters = this.service.listOfLetters;
-    this.audioService.changeAudioSrc(this.listOfLetters[this.currentQuestion]);
+    this.audioService.changeAudioSrc(this.listOfLetters[this.currentQuestion - 1]);
   }
 
   async ngOnInit()  {
@@ -46,7 +46,7 @@ export class QuizComponent implements OnInit {
     if(this.currentQuestion === 0) {
       const firstSelected = this.elementRef.nativeElement.querySelector('.active-uf') as HTMLButtonElement;
       firstSelected.dataset['question']= this.currentQuestion.toString();
-      firstSelected.dataset['letterAnswer']= this.listOfLetters[this.currentQuestion];
+      firstSelected.dataset['letterAnswer']= this.listOfLetters[this.currentQuestion - 1];
       firstSelected.disabled = true;
     } else {
       this.setLastQuestionOptions();
@@ -57,21 +57,21 @@ export class QuizComponent implements OnInit {
     const lastSelected = this.elementRef.nativeElement.querySelector('[data-question="0"].active-uf') as HTMLButtonElement;
     if(lastSelected) {
       lastSelected.dataset['question']= this.currentQuestion.toString();
-      lastSelected.dataset['letterAnswer']= this.listOfLetters[this.currentQuestion];
+      lastSelected.dataset['letterAnswer']= this.listOfLetters[this.currentQuestion - 1];
       lastSelected.disabled = true;
     }
   }
 
   public prevQuestion() : void {
     this.currentQuestion--;
-    this.audioService.changeSrcAndResetAudioTime(this.listOfLetters[this.currentQuestion]);
+    this.audioService.changeSrcAndResetAudioTime(this.listOfLetters[this.currentQuestion - 1]);
     this.checkQuestionStatus();
   }
 
   public nextQuestion() : void {
     this.checkActiveAndSetAsData();
     this.currentQuestion++;
-    this.audioService.changeSrcAndResetAudioTime(this.listOfLetters[this.currentQuestion]);
+    this.audioService.changeSrcAndResetAudioTime(this.listOfLetters[this.currentQuestion - 1]);
     this.checkQuestionStatus();
     this.listOfNextClickPerQuestion[this.currentQuestion - 2] = {
       question: this.currentQuestion - 1,
