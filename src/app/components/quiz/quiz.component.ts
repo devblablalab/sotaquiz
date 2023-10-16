@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
-import { DataSendQuiz } from 'src/app/interfaces/quiz';
+import { DataSendQuiz, QuestionCounters } from 'src/app/interfaces/quiz';
 import { AudioService } from 'src/app/services/audio.service';
 import { QuizService } from 'src/app/services/quiz.service';
 
@@ -14,6 +14,7 @@ export class QuizComponent implements OnInit {
   public currentQuestion : number = 1;
   public audioUfSrc : string = '';
   public isMaxQuestion : boolean = false;
+  public listOfNextClickPerQuestion : Array<QuestionCounters> = [];
   public listOfSelectedQuestion : Array<Object> = [];
   
   constructor(
@@ -72,6 +73,11 @@ export class QuizComponent implements OnInit {
     this.currentQuestion++;
     this.audioService.changeSrcAndResetAudioTime(this.listOfLetters[this.currentQuestion]);
     this.checkQuestionStatus();
+    this.listOfNextClickPerQuestion[this.currentQuestion - 2] = {
+      question: this.currentQuestion - 1,
+      count: this.listOfNextClickPerQuestion[this.currentQuestion - 1]?.count ? 
+      this.listOfNextClickPerQuestion[this.currentQuestion - 1].count + 1 : 1
+    }
   }
 
   private maintainingOneUf() : void {
@@ -79,7 +85,6 @@ export class QuizComponent implements OnInit {
     const changedButtonsInQuestion = this.elementRef.nativeElement.querySelectorAll(`[data-question="${this.currentQuestion}"]`);
     const elementsToReset = new Set([...resetedButtons, ...changedButtonsInQuestion]);
 
-  
     elementsToReset.forEach((active : HTMLButtonElement) => {
       active.classList.remove('active-uf');
       active.dataset['question'] = '0';
@@ -101,6 +106,7 @@ export class QuizComponent implements OnInit {
     const answersBtns = this.elementRef.nativeElement.querySelectorAll('[data-letter-answer].active-uf');
     this.service.setQuizSendData(Array.from(answersBtns) as HTMLButtonElement[]);
     this.service.sendStateCounters();
+    this.service.sendNextQuestionCounters(this.listOfNextClickPerQuestion);
     this.service.sendFinishQuiz();
   }
 }

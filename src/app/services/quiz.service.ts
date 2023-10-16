@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { collection, doc, getDocs, getFirestore, query, updateDoc, where, increment } from 'firebase/firestore';
-import { DataSendQuiz } from '../interfaces/quiz';
+import { DataSendQuiz, QuestionCounters } from '../interfaces/quiz';
 
 @Injectable({
   providedIn: 'root'
@@ -136,6 +136,12 @@ export class QuizService {
           return;
         }
       }
+    });
+  }
+
+  public async sendNextQuestionCounters(counterQuestionData : Array<QuestionCounters>) {
+    counterQuestionData.forEach(counter => {
+      console.log(counter)
     });
   }
 
