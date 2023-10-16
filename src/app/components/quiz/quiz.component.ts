@@ -19,7 +19,7 @@ export class QuizComponent implements OnInit {
   constructor(
     private service : QuizService, 
     private audioService : AudioService, 
-    private elementRef: ElementRef
+    private elementRef : ElementRef
   ) {
     this.listOfLetters = this.service.listOfLetters;
     this.audioService.changeAudioSrc(this.listOfLetters[this.currentQuestion]);

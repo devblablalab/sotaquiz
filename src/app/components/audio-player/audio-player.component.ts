@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, ElementRef } from '@angular/core';
 import { Subscription, interval } from 'rxjs';
 import { AudioService } from 'src/app/services/audio.service';
 
@@ -12,7 +12,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   public isPlaying : boolean = false;
   public volumeIsOpen : boolean = false;
 
-  constructor(public service: AudioService) { 
+  constructor(public service: AudioService, private elementRef : ElementRef) { 
     this.service.audioPlayer.addEventListener('ended', () => {
       this.service.audioPlayer.currentTime = 0;
       this.service.isPlaying = false;
@@ -34,7 +34,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   public toggleStateVolume(e : Event) {
-    const volumeIcon = document.querySelector('.volume-icon');
+    const volumeIcon = this.elementRef.nativeElement.querySelector('.volume-icon');
     const { target } = e;
     if(target === volumeIcon || volumeIcon?.contains(target as Node)) {
       this.volumeIsOpen = !this.volumeIsOpen;
@@ -73,7 +73,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   private handleDocumentVolumeClick(e: Event) {
-    const volumeIcon = document.querySelector('.volume-icon');
+    const volumeIcon = this.elementRef.nativeElement.querySelector('.volume-icon');
     const { target } = e;
     const targetElement = target as HTMLElement;
 
@@ -95,7 +95,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   private updateRangeslider() {
-    const durationSlider = document.querySelector('.duration-slider') as HTMLInputElement;
+    const durationSlider = this.elementRef.nativeElement.querySelector('.duration-slider') as HTMLInputElement;
     if (this.service.audioPlayer) {
       const currentTime = this.service.audioPlayer.currentTime;
       const duration = this.service.audioPlayer.duration;
