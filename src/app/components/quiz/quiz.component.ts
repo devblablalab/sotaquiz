@@ -1,5 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { collection, getFirestore } from 'firebase/firestore';
+import { DataSendQuiz } from 'src/app/interfaces/quiz';
 import { AudioService } from 'src/app/services/audio.service';
 import { QuizService } from 'src/app/services/quiz.service';
 
@@ -86,8 +87,8 @@ export class QuizComponent implements OnInit {
   }
 
   public sendQuiz() {
-    const answersValidatedList = this.service.getQuestionAnswersList();
     const answersBtns = document.querySelectorAll('[data-letter-answer].active-uf');
-    const dataToSend = this.service.getQuizDataToSendOfBtns(Array.from(answersBtns) as HTMLButtonElement[]);
+    const dataOfBtns : DataSendQuiz[] = this.service.getQuizDataToSendOfBtns(Array.from(answersBtns) as HTMLButtonElement[]);
+    this.service.sendStateCounters(dataOfBtns);
   }
 }

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { collection, getDocs, getFirestore } from 'firebase/firestore';
+import { collection, doc, getDocs, getFirestore, query, updateDoc, where, increment } from 'firebase/firestore';
+import { DataSendQuiz } from '../interfaces/quiz';
 
 @Injectable({
   providedIn: 'root'
@@ -11,11 +12,32 @@ export class QuizService {
   ];
   private questionAnswersList : any = [];
   public ufCollection;
+  public questionCollection;
 
   constructor() {
     this.ufCollection = collection(this.firestore, 'ufs');
+    this.questionCollection = collection(this.firestore, 'questions');
     this.listOfLetters = this.shuffleArrayOfLetters(this.listOfLetters);
     this.setQuestionList();
+  }
+
+  async getQuestionsAnswers() {
+    try {
+      const questionDocs = await getDocs(this.questionCollection);
+      const dataDoc: { answers?: any[] }[] = questionDocs.docs.map((doc) => ({
+        id: doc.id,
+        ...(doc.data() as { answers?: any[] })
+      }));
+
+      const firstDocWithAnswers = dataDoc.find((doc) => doc.answers);
+      if (firstDocWithAnswers && firstDocWithAnswers.answers) {
+        return firstDocWithAnswers.answers;
+      } else {
+        return [];
+      }
+    } catch (error) {
+      return [];
+    }
   }
 
   async setDataUfs(): Promise<string[]> {
@@ -56,12 +78,33 @@ export class QuizService {
     return array;
   }
 
-  public getQuizDataToSendOfBtns(btns : HTMLButtonElement[]) : Array<{audioLetter: string | undefined, answerValue: string | undefined}> {
+  public getQuizDataToSendOfBtns(btns : HTMLButtonElement[]) {
     return btns.map(btn => {
       let { uf, letterAnswer } = btn.dataset;
+      const correctAnswer = this.questionAnswersList.find((answer: { audioLetter: string | undefined; }) => answer.audioLetter === letterAnswer);
       return {
-        audioLetter:letterAnswer = undefined ? '' : letterAnswer,
-        answerValue:uf = undefined ? '' : uf
+        answerValue:uf = undefined ? '' : uf,
+        isCorrect: correctAnswer.correctValue === uf
+      }
+    });
+  }
+
+  public sendStateCounters(data : DataSendQuiz[] | []) {
+    const correctAnswers = data.filter(answer => answer.isCorrect);
+    correctAnswers.forEach(async (answer) => {
+      if (answer && answer.answerValue) {
+        const answerValueUppercase : string = answer.answerValue.toUpperCase();
+        try {
+          const docSnap = await getDocs(query(collection(this.firestore, 'statesAnswersCount'), where(answerValueUppercase, '>=', 0)));
+          if (docSnap.docs.length > 0) {
+            const docRef = doc(this.firestore, 'statesAnswersCount', docSnap.docs[0].id);
+            const fieldToUpdate = answerValueUppercase;
+            const updateData = { [fieldToUpdate]: increment(1) };
+            await updateDoc(docRef, updateData);
+          }
+        } catch (error) {
+          return;
+        }
       }
     });
   }
