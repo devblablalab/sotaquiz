@@ -45,12 +45,16 @@ export class QuizComponent implements OnInit {
       firstSelected.dataset['letterAnswer']= this.listOfLetters[this.currentQuestion];
       firstSelected.disabled = true;
     } else {
-      const lastSelected = document.querySelector('[data-question="0"].active-uf') as HTMLButtonElement;
-      if(lastSelected) {
-        lastSelected.dataset['question']= this.currentQuestion.toString();
-        lastSelected.dataset['letterAnswer']= this.listOfLetters[this.currentQuestion];
-        lastSelected.disabled = true;
-      }
+      this.setLastQuestionOptions();
+    }
+  }
+
+  private setLastQuestionOptions() {
+    const lastSelected = document.querySelector('[data-question="0"].active-uf') as HTMLButtonElement;
+    if(lastSelected) {
+      lastSelected.dataset['question']= this.currentQuestion.toString();
+      lastSelected.dataset['letterAnswer']= this.listOfLetters[this.currentQuestion];
+      lastSelected.disabled = true;
     }
   }
 
@@ -84,6 +88,9 @@ export class QuizComponent implements OnInit {
     const currentTarget = e.currentTarget as HTMLElement;
     this.maintainingOneUf();
     currentTarget.classList.add('active-uf');
+    if(this.isMaxQuestion) {
+      this.setLastQuestionOptions();
+    }
   }
 
   public sendQuiz() {

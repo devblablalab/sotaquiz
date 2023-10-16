@@ -84,7 +84,7 @@ export class QuizService {
       const correctAnswer = this.questionAnswersList.find((answer: { audioLetter: string | undefined; }) => answer.audioLetter === letterAnswer);
       return {
         answerValue:uf = undefined ? '' : uf,
-        isCorrect: correctAnswer.correctValue === uf
+        isCorrect: correctAnswer ? (correctAnswer.correctValue === uf) : false,
       }
     });
   }
