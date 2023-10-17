@@ -3,7 +3,8 @@ export interface DataSendQuiz {
     isCorrect: boolean
 }
 
-export interface QuestionCounters {
+export interface QuestionUsage {
     question: number, 
-    count: number
+    isAnswered : boolean,
+    nextCount: number
 }

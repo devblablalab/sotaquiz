@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
-import { QuestionCounters } from 'src/app/interfaces/quiz';
+import { QuestionUsage } from 'src/app/interfaces/quiz';
 import { AudioService } from 'src/app/services/audio.service';
 import { QuizService } from 'src/app/services/quiz.service';
 
@@ -14,7 +14,7 @@ export class QuizComponent implements OnInit {
   public currentQuestion : number = 1;
   public audioUfSrc : string = '';
   public isMaxQuestion : boolean = false;
-  public listOfNextClickPerQuestion : Array<QuestionCounters> = [];
+  public listOfUsagePerQuestion : Array<QuestionUsage> = [];
   public listOfSelectedQuestion : Array<Object> = [];
   
   constructor(
@@ -69,6 +69,23 @@ export class QuizComponent implements OnInit {
     if(element.dataset['letterAnswer']) element.removeAttribute('data-letter-answer');
   }
 
+  private setUsageDataItem() {
+    this.listOfUsagePerQuestion[this.currentQuestion - 2] = {
+      question: this.currentQuestion - 1,
+      isAnswered : this.elementRef.nativeElement.querySelector(`[data-question="${this.currentQuestion - 1}"]`) 
+      !== null,
+      nextCount: this.listOfUsagePerQuestion[this.currentQuestion - 1]?.nextCount ? this.listOfUsagePerQuestion[this.currentQuestion - 1].nextCount + 1 : 1
+    }
+  }
+
+  private setUsageDataLastItem() {
+    this.listOfUsagePerQuestion[this.currentQuestion - 1] = {
+      question: this.currentQuestion,
+      isAnswered : this.elementRef.nativeElement.querySelector(`[data-question="${this.currentQuestion - 1}"]`) !== null,
+      nextCount: 0
+    }
+  }
+
   public prevQuestion() : void {
     this.currentQuestion--;
     this.audioService.changeSrcAndResetAudioTime(this.listOfLetters[this.currentQuestion - 1]);
@@ -80,11 +97,7 @@ export class QuizComponent implements OnInit {
     this.currentQuestion++;
     this.audioService.changeSrcAndResetAudioTime(this.listOfLetters[this.currentQuestion - 1]);
     this.checkQuestionStatus();
-    this.listOfNextClickPerQuestion[this.currentQuestion - 2] = {
-      question: this.currentQuestion - 1,
-      count: this.listOfNextClickPerQuestion[this.currentQuestion - 1]?.count ? 
-      this.listOfNextClickPerQuestion[this.currentQuestion - 1].count + 1 : 1
-    }
+    this.setUsageDataItem();
   }
 
   private maintainingOneAnswer(currentElement : HTMLButtonElement) {
@@ -117,10 +130,11 @@ export class QuizComponent implements OnInit {
   }
 
   public sendQuiz() {
+    this.setUsageDataLastItem();
     const answersBtns = this.elementRef.nativeElement.querySelectorAll('[data-letter-answer].active-uf');
     this.service.setQuizSendData(Array.from(answersBtns) as HTMLButtonElement[]);
     this.service.sendStateCounters();
-    this.service.sendNextQuestionCounters(this.listOfNextClickPerQuestion);
+    this.service.sendUsageData(this.listOfUsagePerQuestion);
     this.service.sendFinishQuiz();
   }
 }

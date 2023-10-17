@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { collection, doc, getDocs, getFirestore, query, updateDoc, where, increment } from 'firebase/firestore';
-import { DataSendQuiz, QuestionCounters } from '../interfaces/quiz';
+import { collection, doc, getDocs, getFirestore, query, updateDoc, where, increment, addDoc } from 'firebase/firestore';
+import { DataSendQuiz, QuestionUsage } from '../interfaces/quiz';
 
 @Injectable({
   providedIn: 'root'
@@ -81,7 +81,7 @@ export class QuizService {
 
   public async sendStartQuiz() {
     try {
-      const docSnap = await getDocs(query(collection(this.firestore, 'usageData'), where('whoStarted', '>=', 0)));
+      const docSnap = await getDocs(query(collection(this.firestore, 'terminationMetric'), where('whoStarted', '>=', 0)));
         if (docSnap.docs.length > 0) {
           const docRef = doc(this.firestore, 'usageData', docSnap.docs[0].id);
           const updateData = { ['whoStarted']: increment(1) };
@@ -139,10 +139,15 @@ export class QuizService {
     });
   }
 
-  public async sendNextQuestionCounters(counterQuestionData : Array<QuestionCounters>) {
-    counterQuestionData.forEach(counter => {
-      
-    });
+  public async sendUsageData(usageData : Array<QuestionUsage>) {
+    try {
+      const docRef = collection(this.firestore, 'usage');
+      await addDoc(docRef,{
+        data:usageData
+      });
+    } catch (error) {
+      return;
+    }
   }
 
   //Getters
