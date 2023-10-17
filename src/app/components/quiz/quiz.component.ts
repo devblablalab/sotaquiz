@@ -62,6 +62,13 @@ export class QuizComponent implements OnInit {
     }
   }
 
+  private unsetDefaultQuestionOptions(element : HTMLButtonElement) {
+    element.classList.remove('active-uf');
+    element.dataset['question'] = '0';
+    element.disabled = false;
+    if(element.dataset['letterAnswer']) element.removeAttribute('data-letter-answer');
+  }
+
   public prevQuestion() : void {
     this.currentQuestion--;
     this.audioService.changeSrcAndResetAudioTime(this.listOfLetters[this.currentQuestion - 1]);
@@ -80,23 +87,30 @@ export class QuizComponent implements OnInit {
     }
   }
 
-  private maintainingOneUf() : void {
+  private maintainingOneAnswer(currentElement : HTMLButtonElement) {
     const resetedButtons = this.elementRef.nativeElement.querySelectorAll('[data-question="0"].active-uf');
     const changedButtonsInQuestion = this.elementRef.nativeElement.querySelectorAll(`[data-question="${this.currentQuestion}"]`);
     const elementsToReset = new Set([...resetedButtons, ...changedButtonsInQuestion]);
 
+    if(elementsToReset.size > 0) {
+      const [element] = elementsToReset;
+      if(element === currentElement) {
+        return false;
+      }
+    }
+
     elementsToReset.forEach((active : HTMLButtonElement) => {
-      active.classList.remove('active-uf');
-      active.dataset['question'] = '0';
-      active.disabled = false;
-      if(active.dataset['letterAnswer']) active.removeAttribute('data-letter-answer');
+      this.unsetDefaultQuestionOptions(active);
     });
+
+    return true;
   }
 
   public toggleUfOptions(e: Event): void {
-    const currentTarget = e.currentTarget as HTMLElement;
-    this.maintainingOneUf();
-    currentTarget.classList.add('active-uf');
+    const currentTarget = e.currentTarget as HTMLButtonElement;
+    if(this.maintainingOneAnswer(currentTarget)) currentTarget.classList.add('active-uf')  
+    else currentTarget.classList.remove('active-uf');
+
     if(this.isMaxQuestion) {
       this.setLastQuestionOptions();
     }
