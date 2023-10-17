@@ -28,6 +28,10 @@ export class QuizComponent implements OnInit {
 
   async ngOnInit()  {
     this.ufList = await this.service.setDataUfs();
+    if(this.service.quizResultPrev) {
+      this.currentQuestion = this.listOfLetters.length;
+      this.setAnswerInPrev();
+    }
   }
 
   private checkQuestionStatus() : void {
@@ -64,8 +68,10 @@ export class QuizComponent implements OnInit {
   private setAnswerInPrev() {
     const questionAnswer = this.service.questionsList.find((answer : QuizQuestionList) => answer.question === this.currentQuestion);
     const btnAnswer = this.elementRef.nativeElement.querySelector(`[data-uf="${questionAnswer?.answerValue}"]`);
-    btnAnswer.classList.add('active-uf');
-    this.setDefaultQuestionOptions(btnAnswer);
+    if(btnAnswer) {
+      btnAnswer.classList.add('active-uf');
+      this.setDefaultQuestionOptions(btnAnswer);
+    }
   }
 
   private getDataOfAnswerBtn() : {uf: string, letterAnswer: string} | null {
@@ -162,11 +168,12 @@ export class QuizComponent implements OnInit {
     const currentTarget = e.currentTarget as HTMLButtonElement;
     currentTarget.classList.toggle('active-uf') 
     this.toggleQuestionOptions(currentTarget);
-    this.maintainingOneAnswer(currentTarget)
+    this.maintainingOneAnswer(currentTarget);
   }
 
   public sendQuiz() {
     this.service.quizIsFinished = true;
+    this.service.quizResultPrev = false;
     this.setUsageDataLastItem();
     this.setAllAudiosToUsageData();
     this.service.sendStateCounters();

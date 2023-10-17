@@ -15,6 +15,7 @@ export class QuizService {
   public ufCollection;
   public questionCollection;
   public quizIsFinished : boolean = false;
+  public quizResultPrev : boolean = false;
   public questionsList : Array<QuizQuestionList> = [];
 
   constructor(private router: Router) {

@@ -7,9 +7,13 @@ import { QuizService } from 'src/app/services/quiz.service';
   styleUrls: ['./confirm-quiz.component.scss']
 })
 export class ConfirmQuizComponent implements OnInit {
-  constructor(private quizService: QuizService) { }
+  constructor(private service : QuizService) { }
 
   ngOnInit() {
-    this.quizService.protectQuizRoute();
+    this.service.protectQuizRoute();
+  }
+
+  goToQuiz() {
+    this.service.quizResultPrev = true;
   }
 }
