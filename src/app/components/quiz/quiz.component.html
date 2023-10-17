@@ -2,12 +2,12 @@
     <app-header shapeSrc="assets/shapes/border-box.svg"></app-header>
     <div class="d-flex flex-col justify-center align-items-center">
         <div class="question-page-subtitle">{{ currentQuestion}}/{{ ufList.length }}</div>
-        <p class="question-text">De que estado <br> é esse sotaque?</p>
+        <p class="question-text">Consegue acertar <br> de que estado eu sou ?</p>
     </div>
     <div class="d-flex justify-center align-items-center">
         <audio-player (click)="setAudioUsageData($event)" [audioLetter]="listOfLetters[currentQuestion - 1]"></audio-player>
     </div>
-    <p class="title-muted mt-4">Selecione uma opção</p>
+    <p class="title-muted mt-4">Selecione uma opção:</p>
     <div class="quiz-actions">
         <button (click)="prevQuestion()" class="btn-default bg-light hover-opacity" type="button">
             <img src="assets/icons/arrow-left.svg" alt="">
