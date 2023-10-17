@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
-import { QuestionUsage, QuestionUsageAudioCount } from 'src/app/interfaces/quiz';
+import { QuestionUsage, QuestionUsageAudioCount, QuizQuestionList } from 'src/app/interfaces/quiz';
 import { AudioService } from 'src/app/services/audio.service';
 import { QuizService } from 'src/app/services/quiz.service';
 
@@ -59,6 +59,13 @@ export class QuizComponent implements OnInit {
     element.classList.remove('active-uf');
     element.dataset['question'] = '0';
     if(element.dataset['letterAnswer']) element.removeAttribute('data-letter-answer');
+  }
+
+  private setAnswerInPrev() {
+    const questionAnswer = this.service.questionsList.find((answer : QuizQuestionList) => answer.question === this.currentQuestion);
+    const btnAnswer = this.elementRef.nativeElement.querySelector(`[data-uf="${questionAnswer?.answerValue}"]`);
+    btnAnswer.classList.add('active-uf');
+    this.setDefaultQuestionOptions(btnAnswer);
   }
 
   private getDataOfAnswerBtn() : {uf: string, letterAnswer: string} | null {
@@ -128,6 +135,7 @@ export class QuizComponent implements OnInit {
     this.currentQuestion--;
     this.audioService.changeSrcAndResetAudioTime(this.listOfLetters[this.currentQuestion - 1]);
     this.checkQuestionStatus();
+    this.setAnswerInPrev();
   }
 
   public nextQuestion() : void {
@@ -139,7 +147,6 @@ export class QuizComponent implements OnInit {
     if(answerData) {
       const { uf, letterAnswer } = answerData;
       this.setListQuestionsData(uf,letterAnswer);
-      console.log(this.service.questionsList)
     }
     this.resetButtonsAnswers();
   }
