@@ -16,7 +16,6 @@ export class QuizComponent implements OnInit {
   public isMaxQuestion : boolean = false;
   public listOfUsagePerQuestion : Array<QuestionUsage> = [];
   public listOfAudioUsagePerQuestion : Array<QuestionUsageAudioCount> = [];
-  public listOfSelectedQuestion : Array<Object> = [];
   
   constructor(
     private service : QuizService, 
@@ -43,31 +42,47 @@ export class QuizComponent implements OnInit {
     }
   }
 
-  private checkActiveAndSetAsData() : void {
-    if(this.currentQuestion === 0) {
-      const firstSelected = this.elementRef.nativeElement.querySelector('.active-uf') as HTMLButtonElement;
-      firstSelected.dataset['question']= this.currentQuestion.toString();
-      firstSelected.dataset['letterAnswer']= this.listOfLetters[this.currentQuestion - 1];
-      firstSelected.disabled = true;
+  private toggleQuestionOptions(currentElement : HTMLButtonElement) {
+    if(currentElement.classList.contains('active-uf')) {
+      this.setDefaultQuestionOptions(currentElement);
     } else {
-      this.setLastQuestionOptions();
+      this.unsetDefaultQuestionOptions(currentElement);
     }
   }
 
-  private setLastQuestionOptions() {
-    const lastSelected = this.elementRef.nativeElement.querySelector('[data-question="0"].active-uf') as HTMLButtonElement;
-    if(lastSelected) {
-      lastSelected.dataset['question']= this.currentQuestion.toString();
-      lastSelected.dataset['letterAnswer']= this.listOfLetters[this.currentQuestion - 1];
-      lastSelected.disabled = true;
-    }
+  private setDefaultQuestionOptions(element : HTMLButtonElement) {
+    element.dataset['question']= this.currentQuestion.toString();
+    element.dataset['letterAnswer']= this.listOfLetters[this.currentQuestion - 1];
   }
 
   private unsetDefaultQuestionOptions(element : HTMLButtonElement) {
     element.classList.remove('active-uf');
     element.dataset['question'] = '0';
-    element.disabled = false;
     if(element.dataset['letterAnswer']) element.removeAttribute('data-letter-answer');
+  }
+
+  private getDataOfAnswerBtn() : {uf: string, letterAnswer: string} | null {
+    const btnAnswer = this.elementRef.nativeElement.querySelector(`[data-question="${this.currentQuestion - 1}"].active-uf`);
+    if(btnAnswer && btnAnswer.dataset) {
+      const { uf, letterAnswer } = btnAnswer.dataset;
+      return {
+        uf,letterAnswer
+      };
+    }
+    return null;
+  }
+
+  private resetButtonsAnswers() {
+    const btnsAnswers = this.elementRef.nativeElement.querySelectorAll(`.active-uf`);
+    btnsAnswers.forEach((btn : HTMLButtonElement ) => this.unsetDefaultQuestionOptions(btn));
+  }
+
+  private setListQuestionsData(uf : string, letterAnswer : string) {
+    this.service.questionsList[this.currentQuestion - 2] = {
+      question: this.currentQuestion - 1,
+      answerValue: uf,
+      isCorrect: this.service.checkCorrectAnswer(uf,letterAnswer)
+    }
   }
 
   private setUsageDataItem() {
@@ -116,47 +131,36 @@ export class QuizComponent implements OnInit {
   }
 
   public nextQuestion() : void {
-    this.checkActiveAndSetAsData();
     this.currentQuestion++;
     this.audioService.changeSrcAndResetAudioTime(this.listOfLetters[this.currentQuestion - 1]);
     this.checkQuestionStatus();
     this.setUsageDataItem();
+    const answerData = this.getDataOfAnswerBtn();
+    if(answerData) {
+      const { uf, letterAnswer } = answerData;
+      this.setListQuestionsData(uf,letterAnswer);
+      console.log(this.service.questionsList)
+    }
+    this.resetButtonsAnswers();
   }
 
   private maintainingOneAnswer(currentElement : HTMLButtonElement) {
-    const resetedButtons = this.elementRef.nativeElement.querySelectorAll('[data-question="0"].active-uf');
-    const changedButtonsInQuestion = this.elementRef.nativeElement.querySelectorAll(`[data-question="${this.currentQuestion}"]`);
-    const elementsToReset = new Set([...resetedButtons, ...changedButtonsInQuestion]);
-
-    if(elementsToReset.size > 0) {
-      const [element] = elementsToReset;
-      if(element === currentElement) {
-        return false;
-      }
-    }
-
-    elementsToReset.forEach((active : HTMLButtonElement) => {
-      this.unsetDefaultQuestionOptions(active);
+    const activeButtons = this.elementRef.nativeElement.querySelectorAll('.active-uf');
+    activeButtons.forEach((active : HTMLButtonElement) => {
+      if(active !== currentElement) this.unsetDefaultQuestionOptions(active);
     });
-
-    return true;
   }
 
   public toggleUfOptions(e: Event): void {
     const currentTarget = e.currentTarget as HTMLButtonElement;
-    if(this.maintainingOneAnswer(currentTarget)) currentTarget.classList.add('active-uf')  
-    else currentTarget.classList.remove('active-uf');
-
-    if(this.isMaxQuestion) {
-      this.setLastQuestionOptions();
-    }
+    currentTarget.classList.toggle('active-uf') 
+    this.toggleQuestionOptions(currentTarget);
+    this.maintainingOneAnswer(currentTarget)
   }
 
   public sendQuiz() {
     this.setUsageDataLastItem();
     this.setAllAudiosToUsageData();
-    const answersBtns = this.elementRef.nativeElement.querySelectorAll('[data-letter-answer].active-uf');
-    this.service.setQuizSendData(Array.from(answersBtns) as HTMLButtonElement[]);
     this.service.sendStateCounters();
     this.service.sendUsageData(this.listOfUsagePerQuestion);
     this.service.sendFinishQuiz();

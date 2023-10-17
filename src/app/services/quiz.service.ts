@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { collection, doc, getDocs, getFirestore, query, updateDoc, where, increment, addDoc } from 'firebase/firestore';
-import { DataSendQuiz, QuestionUsage } from '../interfaces/quiz';
+import { DataSendQuiz, QuestionUsage, QuizQuestionList } from '../interfaces/quiz';
 
 @Injectable({
   providedIn: 'root'
@@ -10,10 +10,10 @@ export class QuizService {
   public listOfLetters : Array<string> = [
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z','ab'
   ];
-  private questionAnswersList : any = [];
+  private questionAnswersListReference : any = [];
   public ufCollection;
   public questionCollection;
-  public quizSendData : DataSendQuiz[] | [] = [];
+  public questionsList : Array<QuizQuestionList> = [];
 
   constructor() {
     this.ufCollection = collection(this.firestore, 'ufs');
@@ -67,7 +67,7 @@ export class QuizService {
     }));
 
     if(dataDoc[0].answers) {
-      this.questionAnswersList = dataDoc[0].answers;
+      this.questionAnswersListReference = dataDoc[0].answers;
     }
   }
 
@@ -106,18 +106,12 @@ export class QuizService {
   }
 
   public getCorrectAnswers() {
-    return this.quizSendData.filter(answer => answer.isCorrect);
+    return this.questionsList.filter(answer => answer.isCorrect);
   }
 
-  public setQuizSendData(btns : HTMLButtonElement[]) {
-    this.quizSendData = btns.map(btn => {
-      let { uf, letterAnswer } = btn.dataset;
-      const correctAnswer = this.questionAnswersList.find((answer: { audioLetter: string | undefined; }) => answer.audioLetter === letterAnswer);
-      return {
-        answerValue:uf = undefined ? '' : uf,
-        isCorrect: correctAnswer ? (correctAnswer.correctValue === uf) : false,
-      }
-    });
+  public checkCorrectAnswer(uf :string ,letterAnswer : string) {
+    const correctAnswer = this.questionAnswersListReference.find((answer: { audioLetter: string }) => answer.audioLetter === letterAnswer);
+    return correctAnswer ? (correctAnswer.correctValue === uf ) : false
   }
 
   public sendStateCounters() {
@@ -151,7 +145,7 @@ export class QuizService {
   }
 
   //Getters
-  public getQuestionAnswersList() {
-    return this.questionAnswersList;
+  public getQuestionAnswersListReference() {
+    return this.questionAnswersListReference;
   }
 }

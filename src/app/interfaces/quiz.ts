@@ -1,3 +1,8 @@
+export interface QuizQuestionList {
+    question: number,
+    answerValue: string,
+    isCorrect: boolean,
+}
 export interface DataSendQuiz {
     answerValue: string | undefined, 
     isCorrect: boolean
