@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
-import { QuestionUsage } from 'src/app/interfaces/quiz';
+import { QuestionUsage, QuestionUsageAudioCount } from 'src/app/interfaces/quiz';
 import { AudioService } from 'src/app/services/audio.service';
 import { QuizService } from 'src/app/services/quiz.service';
 
@@ -15,6 +15,7 @@ export class QuizComponent implements OnInit {
   public audioUfSrc : string = '';
   public isMaxQuestion : boolean = false;
   public listOfUsagePerQuestion : Array<QuestionUsage> = [];
+  public listOfAudioUsagePerQuestion : Array<QuestionUsageAudioCount> = [];
   public listOfSelectedQuestion : Array<Object> = [];
   
   constructor(
@@ -74,7 +75,8 @@ export class QuizComponent implements OnInit {
       question: this.currentQuestion - 1,
       isAnswered : this.elementRef.nativeElement.querySelector(`[data-question="${this.currentQuestion - 1}"]`) 
       !== null,
-      nextCount: this.listOfUsagePerQuestion[this.currentQuestion - 1]?.nextCount ? this.listOfUsagePerQuestion[this.currentQuestion - 1].nextCount + 1 : 1
+      nextCount: this.listOfUsagePerQuestion[this.currentQuestion - 1]?.nextCount ? this.listOfUsagePerQuestion[this.currentQuestion - 1].nextCount + 1 : 1,
+      audioCount: 0
     }
   }
 
@@ -82,7 +84,28 @@ export class QuizComponent implements OnInit {
     this.listOfUsagePerQuestion[this.currentQuestion - 1] = {
       question: this.currentQuestion,
       isAnswered : this.elementRef.nativeElement.querySelector(`[data-question="${this.currentQuestion - 1}"]`) !== null,
-      nextCount: 0
+      nextCount: 0,
+      audioCount: 0
+    }
+  }
+
+  public setAudioUsageData(e : Event) {
+    const target = e.target as HTMLElement;
+    if (target.classList.contains('play-icon-handler') || target.closest('.play-icon-handler') !== null) {
+      this.listOfAudioUsagePerQuestion[this.currentQuestion - 1] = {
+        question: this.currentQuestion,
+        audioCount: this.listOfAudioUsagePerQuestion[this.currentQuestion - 1]?.audioCount ? this.listOfAudioUsagePerQuestion[this.currentQuestion - 1].audioCount + 1 : 1,
+      }
+    }
+  }
+
+  public setAllAudiosToUsageData() {
+    if(this.listOfAudioUsagePerQuestion.length > 0) {
+      this.listOfAudioUsagePerQuestion.forEach((item,key) => {
+        if(this.listOfUsagePerQuestion[key]) {
+          this.listOfUsagePerQuestion[key]['audioCount'] = item.audioCount;
+        }
+      });
     }
   }
 
@@ -131,6 +154,7 @@ export class QuizComponent implements OnInit {
 
   public sendQuiz() {
     this.setUsageDataLastItem();
+    this.setAllAudiosToUsageData();
     const answersBtns = this.elementRef.nativeElement.querySelectorAll('[data-letter-answer].active-uf');
     this.service.setQuizSendData(Array.from(answersBtns) as HTMLButtonElement[]);
     this.service.sendStateCounters();

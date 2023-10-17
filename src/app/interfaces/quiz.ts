@@ -6,5 +6,11 @@ export interface DataSendQuiz {
 export interface QuestionUsage {
     question: number, 
     isAnswered : boolean,
-    nextCount: number
+    nextCount: number,
+    audioCount: number
+}
+
+export interface QuestionUsageAudioCount {
+    question:number,
+    audioCount:number
 }
