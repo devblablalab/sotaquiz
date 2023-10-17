@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { collection, doc, getDocs, getFirestore, query, updateDoc, where, increment, addDoc } from 'firebase/firestore';
-import { DataSendQuiz, QuestionUsage, QuizQuestionList } from '../interfaces/quiz';
+import { QuestionUsage, QuizQuestionList } from '../interfaces/quiz';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -13,13 +14,21 @@ export class QuizService {
   private questionAnswersListReference : any = [];
   public ufCollection;
   public questionCollection;
+  public quizIsFinished : boolean = false;
   public questionsList : Array<QuizQuestionList> = [];
 
-  constructor() {
+  constructor(private router: Router) {
     this.ufCollection = collection(this.firestore, 'ufs');
     this.questionCollection = collection(this.firestore, 'questions');
     this.listOfLetters = this.shuffleArrayOfLetters(this.listOfLetters);
     this.setQuestionList();
+  }
+
+  public protectQuizRoute() {
+    const currentRoute = this.router.url;
+    if(currentRoute !== '/quiz' && this.quizIsFinished === false) {
+      this.router.navigate(['/quiz']);
+    }
   }
 
   async getQuestionsAnswers() {

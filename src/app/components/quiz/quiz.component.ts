@@ -159,6 +159,7 @@ export class QuizComponent implements OnInit {
   }
 
   public sendQuiz() {
+    this.service.quizIsFinished = true;
     this.setUsageDataLastItem();
     this.setAllAudiosToUsageData();
     this.service.sendStateCounters();

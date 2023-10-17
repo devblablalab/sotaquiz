@@ -38,23 +38,34 @@
 }
 
 .d-flex {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
 }
 
 .flex-col {
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
 }
 
 .align-items-center {
-    align-items: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
 }
 
 .justify-center {
-    justify-content: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
 }
 
 .justify-between {
-    justify-content: space-between;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
 }
 
 .gap-1 {
@@ -78,20 +89,39 @@
     margin: 0 auto;
 }
 
+.pointer {
+    cursor: pointer;
+}
+
 .wrapper {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
     min-height: 90vh;
     max-width: 40rem;
 }
 
 .shape-container {
     position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
     min-height: $shapeHeight;
     img.shape {
         width: 100%;
@@ -173,7 +203,9 @@
 }
 
 .ufs {
+    display: -ms-grid;
     display: grid;
+    -ms-grid-columns: 1fr 0.8rem 1fr 0.8rem 1fr 0.8rem 1fr 0.8rem 1fr 0.8rem 1fr 0.8rem 1fr 0.8rem 1fr 0.8rem 1fr;
     grid-template-columns: repeat(9,1fr);
     gap: 0.8rem;
     @media screen and (max-width:767px) {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { QuizService } from 'src/app/services/quiz.service';
 
 @Component({
@@ -6,6 +6,10 @@ import { QuizService } from 'src/app/services/quiz.service';
   templateUrl: './confirm-quiz.component.html',
   styleUrls: ['./confirm-quiz.component.scss']
 })
-export class ConfirmQuizComponent {
+export class ConfirmQuizComponent implements OnInit {
   constructor(private quizService: QuizService) { }
+
+  ngOnInit() {
+    this.quizService.protectQuizRoute();
+  }
 }

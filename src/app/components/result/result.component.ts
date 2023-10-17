@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DataSendQuiz } from 'src/app/interfaces/quiz';
+import { QuizCorrectQuestions } from 'src/app/interfaces/quiz';
 import { QuizService } from 'src/app/services/quiz.service';
 
 @Component({
@@ -8,11 +8,12 @@ import { QuizService } from 'src/app/services/quiz.service';
   styleUrls: ['./result.component.scss']
 })
 export class ResultComponent implements OnInit {
-  public correctAnswers : DataSendQuiz[] | [] = [];
+  public correctAnswers : QuizCorrectQuestions[] | [] = [];
   public ufList : any = [];
   constructor(private service : QuizService) { }
 
   async ngOnInit() {
+    this.service.protectQuizRoute();
     this.ufList = await this.service.setDataUfs();
     this.correctAnswers = this.service.getCorrectAnswers();
   }
