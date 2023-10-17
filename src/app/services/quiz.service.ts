@@ -141,7 +141,7 @@ export class QuizService {
 
   public async sendNextQuestionCounters(counterQuestionData : Array<QuestionCounters>) {
     counterQuestionData.forEach(counter => {
-
+      
     });
   }
 
