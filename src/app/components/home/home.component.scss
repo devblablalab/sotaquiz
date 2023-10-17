@@ -5,6 +5,9 @@
         align-self: flex-start;
         padding-left: 7rem;
         transform: translateY(-2rem);
+        @media(max-width:380px) {
+            padding-left: 6.2rem;
+        }
     }
 
     .message-text-container {
