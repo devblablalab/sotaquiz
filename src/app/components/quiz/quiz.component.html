@@ -14,7 +14,7 @@
         </button>
         <div class="ufs">
             <button (click)="toggleUfOptions($event)" *ngFor="let uf of ufList" class="btn-default text-light border-light bg-none" type="button" 
-            [attr.data-uf]="uf.toLowerCase()" data-question="0">
+            [attr.data-uf]="uf.toLowerCase()" data-question="0" [class.active-uf]="checkQuizBackHasLast(uf)">
                 {{ uf }}
             </button>
         </div>

@@ -30,8 +30,14 @@ export class QuizComponent implements OnInit {
     this.ufList = await this.service.setDataUfs();
     if(this.service.quizResultPrev) {
       this.currentQuestion = this.listOfLetters.length;
-      this.setAnswerInPrev();
+      this.checkQuestionStatus();
     }
+  }
+
+  public checkQuizBackHasLast(uf : string) {
+    return this.service.quizResultPrev 
+    && this.service.questionsList[this.listOfLetters.length - 1] !== undefined
+    && this.service.questionsList[this.listOfLetters.length - 1]?.answerValue === uf.toLowerCase();
   }
 
   private checkQuestionStatus() : void {
@@ -66,7 +72,8 @@ export class QuizComponent implements OnInit {
   }
 
   private setAnswerInPrev() {
-    const questionAnswer = this.service.questionsList.find((answer : QuizQuestionList) => answer.question === this.currentQuestion);
+    const questionAnswer = this.service.questionsList.find((answer : QuizQuestionList) => answer?.question === this.currentQuestion);
+    this.resetButtonsAnswers();
     const btnAnswer = this.elementRef.nativeElement.querySelector(`[data-uf="${questionAnswer?.answerValue}"]`);
     if(btnAnswer) {
       btnAnswer.classList.add('active-uf');
@@ -74,9 +81,9 @@ export class QuizComponent implements OnInit {
     }
   }
 
-  private getDataOfAnswerBtn() : {uf: string, letterAnswer: string} | null {
-    const btnAnswer = this.elementRef.nativeElement.querySelector(`[data-question="${this.currentQuestion - 1}"].active-uf`);
-    if(btnAnswer && btnAnswer.dataset) {
+  private getDataOfAnswerBtn(index : number) : {uf: string, letterAnswer: string} | null {
+    const btnAnswer = this.elementRef.nativeElement.querySelector(`[data-question="${index}"].active-uf`);
+    if(btnAnswer && btnAnswer.dataset && btnAnswer.classList.contains('active-uf')) {
       const { uf, letterAnswer } = btnAnswer.dataset;
       return {
         uf,letterAnswer
@@ -98,7 +105,16 @@ export class QuizComponent implements OnInit {
     }
   }
 
+  private setLastItemListQuestionsData(uf : string, letterAnswer : string) {
+    this.service.questionsList[this.listOfLetters.length - 1] = {
+      question: this.listOfLetters.length,
+      answerValue: uf,
+      isCorrect: this.service.checkCorrectAnswer(uf,letterAnswer)
+    }
+  }
+
   private setUsageDataItem() {
+
     this.listOfUsagePerQuestion[this.currentQuestion - 2] = {
       question: this.currentQuestion - 1,
       isAnswered : this.elementRef.nativeElement.querySelector(`[data-question="${this.currentQuestion - 1}"]`) 
@@ -149,7 +165,7 @@ export class QuizComponent implements OnInit {
     this.audioService.changeSrcAndResetAudioTime(this.listOfLetters[this.currentQuestion - 1]);
     this.checkQuestionStatus();
     this.setUsageDataItem();
-    const answerData = this.getDataOfAnswerBtn();
+    const answerData = this.getDataOfAnswerBtn(this.currentQuestion - 1);
     if(answerData) {
       const { uf, letterAnswer } = answerData;
       this.setListQuestionsData(uf,letterAnswer);
@@ -169,6 +185,13 @@ export class QuizComponent implements OnInit {
     currentTarget.classList.toggle('active-uf') 
     this.toggleQuestionOptions(currentTarget);
     this.maintainingOneAnswer(currentTarget);
+    if(this.isMaxQuestion) {
+      const answerData = this.getDataOfAnswerBtn(this.currentQuestion);
+      if(answerData) {
+        const { uf, letterAnswer } = answerData;
+        this.setLastItemListQuestionsData(uf,letterAnswer);
+      }
+    }
   }
 
   public sendQuiz() {
