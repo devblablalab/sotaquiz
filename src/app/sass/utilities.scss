@@ -93,6 +93,10 @@
     cursor: pointer;
 }
 
+.hidden {
+    visibility: hidden;
+}
+
 .wrapper {
     display: -webkit-box;
     display: -ms-flexbox;

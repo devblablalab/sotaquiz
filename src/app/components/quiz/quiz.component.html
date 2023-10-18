@@ -9,7 +9,7 @@
     </div>
     <p class="title-muted mt-4">Selecione uma opção:</p>
     <div class="quiz-actions">
-        <button (click)="prevQuestion()" class="btn-default bg-light hover-opacity" type="button">
+        <button (click)="prevQuestion()" class="btn-default bg-light hover-opacity" [class.hidden]="service.currentQuestion === 1" type="button">
             <img src="assets/icons/arrow-left.svg" alt="">
         </button>
         <div class="ufs">

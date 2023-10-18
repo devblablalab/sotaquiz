@@ -20,7 +20,6 @@ export class ResultComponent implements OnInit {
     this.ufList = await this.service.setDataUfs();
     this.correctAnswers = this.service.getCorrectAnswers();
     this.resultImage = this.getResultImage();
-
   }
 
   public checkUfItemIsCorrect(uf : string) {

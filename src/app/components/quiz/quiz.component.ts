@@ -125,6 +125,7 @@ export class QuizComponent implements OnInit {
   }
 
   public prevQuestion() : void {
+    if(this.service.currentQuestion === 1) return;
     this.service.currentQuestion--;
     this.audioService.changeSrcAndResetAudioTime(this.listOfLetters[this.service.currentQuestion - 1]);
     this.checkQuestionStatus();
