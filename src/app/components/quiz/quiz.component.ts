@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { QuestionUsage, QuestionUsageAudioCount, QuizQuestionList } from 'src/app/interfaces/quiz';
 import { AudioService } from 'src/app/services/audio.service';
 import { QuizService } from 'src/app/services/quiz.service';
@@ -11,25 +12,23 @@ import { QuizService } from 'src/app/services/quiz.service';
 export class QuizComponent implements OnInit {
   public ufList : any = [];
   public listOfLetters : Array<string> = [];
-  public currentQuestion : number = 1;
   public audioUfSrc : string = '';
   public isMaxQuestion : boolean = false;
-  public listOfUsagePerQuestion : Array<QuestionUsage> = [];
-  public listOfAudioUsagePerQuestion : Array<QuestionUsageAudioCount> = [];
   
   constructor(
-    private service : QuizService, 
+    public service : QuizService, 
     private audioService : AudioService, 
-    private elementRef : ElementRef
+    private elementRef : ElementRef,
+    private router : Router
   ) {
     this.listOfLetters = this.service.listOfLetters;
-    this.audioService.changeAudioSrc(this.listOfLetters[this.currentQuestion - 1]);
+    this.audioService.changeAudioSrc(this.listOfLetters[this.service.currentQuestion - 1]);
   }
 
   async ngOnInit()  {
     this.ufList = await this.service.setDataUfs();
     if(this.service.quizResultPrev) {
-      this.currentQuestion = this.listOfLetters.length;
+      this.service.currentQuestion = this.listOfLetters.length;
       this.checkQuestionStatus();
     }
   }
@@ -41,14 +40,14 @@ export class QuizComponent implements OnInit {
   }
 
   private checkQuestionStatus() : void {
-    if(this.currentQuestion >= this.ufList.length) {
+    if(this.service.currentQuestion > this.ufList.length) {
       this.isMaxQuestion = true;
     } else {
       this.isMaxQuestion = false;
     }
 
-    if(this.currentQuestion <= (this.ufList.length - this.ufList.length)) {
-      this.currentQuestion = 1;
+    if(this.service.currentQuestion <= (this.ufList.length - this.ufList.length)) {
+      this.service.currentQuestion = 1;
     }
   }
 
@@ -61,8 +60,8 @@ export class QuizComponent implements OnInit {
   }
 
   private setDefaultQuestionOptions(element : HTMLButtonElement) {
-    element.dataset['question']= this.currentQuestion.toString();
-    element.dataset['letterAnswer']= this.listOfLetters[this.currentQuestion - 1];
+    element.dataset['question']= this.service.currentQuestion.toString();
+    element.dataset['letterAnswer']= this.listOfLetters[this.service.currentQuestion - 1];
   }
 
   private unsetDefaultQuestionOptions(element : HTMLButtonElement) {
@@ -72,7 +71,7 @@ export class QuizComponent implements OnInit {
   }
 
   private setAnswerInPrevNext() {
-    const questionAnswer = this.service.questionsList.find((answer : QuizQuestionList) => answer?.question === this.currentQuestion);
+    const questionAnswer = this.service.questionsList.find((answer : QuizQuestionList) => answer?.question === this.service.currentQuestion);
     this.resetButtonsAnswers();
     const btnAnswer = this.elementRef.nativeElement.querySelector(`[data-uf="${questionAnswer?.answerValue}"]`);
     if(btnAnswer) {
@@ -98,37 +97,19 @@ export class QuizComponent implements OnInit {
   }
 
   private setListQuestionsData(uf : string, letterAnswer : string) {
-    this.service.questionsList[this.currentQuestion - 2] = {
-      question: this.currentQuestion - 1,
-      answerValue: uf,
-      isCorrect: this.service.checkCorrectAnswer(uf,letterAnswer)
-    }
-  }
-
-  private setLastItemListQuestionsData(uf : string, letterAnswer : string) {
-    this.service.questionsList[this.listOfLetters.length - 1] = {
-      question: this.listOfLetters.length,
+    this.service.questionsList[this.service.currentQuestion - 2] = {
+      question: this.service.currentQuestion - 1,
       answerValue: uf,
       isCorrect: this.service.checkCorrectAnswer(uf,letterAnswer)
     }
   }
 
   private setUsageDataItem() {
-
-    this.listOfUsagePerQuestion[this.currentQuestion - 2] = {
-      question: this.currentQuestion - 1,
-      isAnswered : this.elementRef.nativeElement.querySelector(`[data-question="${this.currentQuestion - 1}"]`) 
+    this.service.listOfUsagePerQuestion[this.service.currentQuestion - 2] = {
+      question: this.service.currentQuestion - 1,
+      isAnswered : this.elementRef.nativeElement.querySelector(`[data-question="${this.service.currentQuestion - 1}"]`) 
       !== null,
-      nextCount: this.listOfUsagePerQuestion[this.currentQuestion - 1]?.nextCount ? this.listOfUsagePerQuestion[this.currentQuestion - 1].nextCount + 1 : 1,
-      audioCount: 0
-    }
-  }
-
-  private setUsageDataLastItem() {
-    this.listOfUsagePerQuestion[this.currentQuestion - 1] = {
-      question: this.currentQuestion,
-      isAnswered : this.elementRef.nativeElement.querySelector(`[data-question="${this.currentQuestion - 1}"]`) !== null,
-      nextCount: 0,
+      nextCount: this.service.listOfUsagePerQuestion[this.service.currentQuestion - 1]?.nextCount ? this.service.listOfUsagePerQuestion[this.service.currentQuestion - 1].nextCount + 1 : 1,
       audioCount: 0
     }
   }
@@ -136,45 +117,42 @@ export class QuizComponent implements OnInit {
   public setAudioUsageData(e : Event) {
     const target = e.target as HTMLElement;
     if (target.classList.contains('play-icon-handler') || target.closest('.play-icon-handler') !== null) {
-      this.listOfAudioUsagePerQuestion[this.currentQuestion - 1] = {
-        question: this.currentQuestion,
-        audioCount: this.listOfAudioUsagePerQuestion[this.currentQuestion - 1]?.audioCount ? this.listOfAudioUsagePerQuestion[this.currentQuestion - 1].audioCount + 1 : 1,
+      this.service.listOfAudioUsagePerQuestion[this.service.currentQuestion - 1] = {
+        question: this.service.currentQuestion,
+        audioCount: this.service.listOfAudioUsagePerQuestion[this.service.currentQuestion - 1]?.audioCount ? this.service.listOfAudioUsagePerQuestion[this.service.currentQuestion - 1].audioCount + 1 : 1,
       }
     }
   }
 
-  public setAllAudiosToUsageData() {
-    if(this.listOfAudioUsagePerQuestion.length > 0) {
-      this.listOfAudioUsagePerQuestion.forEach((item,key) => {
-        if(this.listOfUsagePerQuestion[key]) {
-          this.listOfUsagePerQuestion[key]['audioCount'] = item.audioCount;
-        }
-      });
-    }
-  }
-
   public prevQuestion() : void {
-    this.currentQuestion--;
-    this.audioService.changeSrcAndResetAudioTime(this.listOfLetters[this.currentQuestion - 1]);
+    this.service.currentQuestion--;
+    this.audioService.changeSrcAndResetAudioTime(this.listOfLetters[this.service.currentQuestion - 1]);
     this.checkQuestionStatus();
     this.setAnswerInPrevNext();
   }
 
   public nextQuestion() : void {
-    this.currentQuestion++;
-    this.audioService.changeSrcAndResetAudioTime(this.listOfLetters[this.currentQuestion - 1]);
+    this.service.currentQuestion++;
+    this.audioService.changeSrcAndResetAudioTime(this.listOfLetters[this.service.currentQuestion - 1]);
     if(!this.audioService.isPlaying) this.audioService.isPlaying = true;
     this.audioService.playAudio();
     this.audioService.resetAudioPlayerTime();
 
     this.checkQuestionStatus();
     this.setUsageDataItem();
-    const answerData = this.getDataOfAnswerBtn(this.currentQuestion - 1);
+    const answerData = this.getDataOfAnswerBtn(this.service.currentQuestion - 1);
     if(answerData) {
       const { uf, letterAnswer } = answerData;
       this.setListQuestionsData(uf,letterAnswer);
     }
     this.setAnswerInPrevNext();
+    if(this.isMaxQuestion) {
+      this.service.currentQuestion = this.ufList.length;
+      this.service.quizIsFinished = true;
+      this.service.quizResultPrev = false;
+      this.audioService.audioPlayer.pause();
+      this.router.navigate(['/confirm-quiz']);
+    }
   }
 
   private maintainingOneAnswer(currentElement : HTMLButtonElement) {
@@ -189,22 +167,5 @@ export class QuizComponent implements OnInit {
     currentTarget.classList.toggle('active-uf') 
     this.toggleQuestionOptions(currentTarget);
     this.maintainingOneAnswer(currentTarget);
-    if(this.isMaxQuestion) {
-      const answerData = this.getDataOfAnswerBtn(this.currentQuestion);
-      if(answerData) {
-        const { uf, letterAnswer } = answerData;
-        this.setLastItemListQuestionsData(uf,letterAnswer);
-      }
-    }
-  }
-
-  public sendQuiz() {
-    this.service.quizIsFinished = true;
-    this.service.quizResultPrev = false;
-    this.setUsageDataLastItem();
-    this.setAllAudiosToUsageData();
-    this.service.sendStateCounters();
-    this.service.sendUsageData(this.listOfUsagePerQuestion);
-    this.service.sendFinishQuiz();
   }
 }

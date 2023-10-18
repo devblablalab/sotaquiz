@@ -1,11 +1,11 @@
 <div class="quiz-container d-flex flex-col align-items-center my-2">
     <app-header shapeSrc="assets/shapes/border-box.svg"></app-header>
     <div class="d-flex flex-col justify-center align-items-center">
-        <div class="question-page-subtitle">{{ currentQuestion}}/{{ ufList.length }}</div>
+        <div class="question-page-subtitle">{{ service.currentQuestion}}/{{ ufList.length }}</div>
         <p class="question-text">Consegue acertar <span class="question-text-paragraph">de que estado eu sou?</span></p>
     </div>
     <div class="d-flex justify-center align-items-center">
-        <audio-player (click)="setAudioUsageData($event)" [audioLetter]="listOfLetters[currentQuestion - 1]"></audio-player>
+        <audio-player (click)="setAudioUsageData($event)" [audioLetter]="listOfLetters[service.currentQuestion - 1]"></audio-player>
     </div>
     <p class="title-muted mt-4">Selecione uma opção:</p>
     <div class="quiz-actions">
@@ -18,15 +18,8 @@
                 {{ uf }}
             </button>
         </div>
-        <button (click)="nextQuestion()" class="btn-default bg-light hover-opacity" type="button" [disabled]="isMaxQuestion">
+        <button (click)="nextQuestion()" class="btn-default bg-light hover-opacity" type="button">
             <img src="assets/icons/arrow-right.svg" alt="">
         </button>
-    </div>
-    <div class="d-flex align-items-center justify-center mt-2" *ngIf="isMaxQuestion">
-        <a routerLink="/confirm-quiz">
-            <button class="btn-default send-quiz" type="button" (click)="sendQuiz()">
-                Enviar
-            </button>
-        </a>
     </div>
 </div>      

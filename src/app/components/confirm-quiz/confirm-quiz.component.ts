@@ -13,7 +13,11 @@ export class ConfirmQuizComponent implements OnInit {
     this.service.protectQuizRoute();
   }
 
-  goToQuiz() {
+  public goToQuiz() {
     this.service.quizResultPrev = true;
+  }
+
+  public sendQuiz() {
+    this.service.sendQuizData();
   }
 }

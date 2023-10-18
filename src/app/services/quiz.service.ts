@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { collection, doc, getDocs, getFirestore, query, updateDoc, where, increment, addDoc } from 'firebase/firestore';
-import { QuestionUsage, QuizQuestionList } from '../interfaces/quiz';
+import { QuestionUsage, QuestionUsageAudioCount, QuizQuestionList } from '../interfaces/quiz';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -11,11 +11,14 @@ export class QuizService {
   public listOfLetters : Array<string> = [
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z','ab'
   ];
+  public currentQuestion : number = 1;
   private questionAnswersListReference : any = [];
   public ufCollection;
   public questionCollection;
   public quizIsFinished : boolean = false;
   public quizResultPrev : boolean = false;
+  public listOfUsagePerQuestion : Array<QuestionUsage> = [];
+  public listOfAudioUsagePerQuestion : Array<QuestionUsageAudioCount> = [];
   public questionsList : Array<QuizQuestionList> = [];
 
   constructor(private router: Router) {
@@ -89,6 +92,16 @@ export class QuizService {
     return array;
   }
 
+  public setAllAudiosToUsageData() {
+    if(this.listOfAudioUsagePerQuestion.length > 0) {
+      this.listOfAudioUsagePerQuestion.forEach((item,key) => {
+        if(this.listOfUsagePerQuestion[key]) {
+          this.listOfUsagePerQuestion[key]['audioCount'] = item.audioCount;
+        }
+      });
+    }
+  }
+
   public async sendStartQuiz() {
     try {
       const docSnap = await getDocs(query(collection(this.firestore, 'terminationMetric'), where('whoStarted', '>=', 0)));
@@ -152,6 +165,13 @@ export class QuizService {
     } catch (error) {
       return;
     }
+  }
+
+  public sendQuizData() {
+    this.setAllAudiosToUsageData();
+    this.sendStateCounters();
+    this.sendUsageData(this.listOfUsagePerQuestion);
+    this.sendFinishQuiz();
   }
 
   //Getters
