@@ -13,7 +13,7 @@ export class ResultComponent implements OnInit {
     constructor(private service : QuizService) { }
 
   async ngOnInit() {
-    //this.service.protectQuizRoute();
+    this.service.protectQuizRoute();
     this.ufList = await this.service.setDataUfs();
     this.correctAnswers = this.service.getCorrectAnswers();
   }
