@@ -194,6 +194,9 @@
     color: $light;
     text-align: center;
     line-height: 2.3rem;
+    .question-text-paragraph{
+        white-space: nowrap;
+    }
 }
 
 .title-muted {
