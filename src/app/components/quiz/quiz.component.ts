@@ -28,7 +28,7 @@ export class QuizComponent implements OnInit {
   async ngOnInit()  {
     this.ufList = await this.service.setDataUfs();
     if(this.service.quizResultPrev) {
-      this.service.currentQuestion = this.listOfLetters.length;
+      this.service.currentQuestion = 1;
       this.checkQuestionStatus();
     }
   }
