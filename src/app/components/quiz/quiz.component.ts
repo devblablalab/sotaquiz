@@ -71,7 +71,7 @@ export class QuizComponent implements OnInit {
     if(element.dataset['letterAnswer']) element.removeAttribute('data-letter-answer');
   }
 
-  private setAnswerInPrev() {
+  private setAnswerInPrevNext() {
     const questionAnswer = this.service.questionsList.find((answer : QuizQuestionList) => answer?.question === this.currentQuestion);
     this.resetButtonsAnswers();
     const btnAnswer = this.elementRef.nativeElement.querySelector(`[data-uf="${questionAnswer?.answerValue}"]`);
@@ -157,7 +157,7 @@ export class QuizComponent implements OnInit {
     this.currentQuestion--;
     this.audioService.changeSrcAndResetAudioTime(this.listOfLetters[this.currentQuestion - 1]);
     this.checkQuestionStatus();
-    this.setAnswerInPrev();
+    this.setAnswerInPrevNext();
   }
 
   public nextQuestion() : void {
@@ -174,7 +174,7 @@ export class QuizComponent implements OnInit {
       const { uf, letterAnswer } = answerData;
       this.setListQuestionsData(uf,letterAnswer);
     }
-    this.resetButtonsAnswers();
+    this.setAnswerInPrevNext();
   }
 
   private maintainingOneAnswer(currentElement : HTMLButtonElement) {
