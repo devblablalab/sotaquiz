@@ -34,6 +34,11 @@ export class AudioService {
     this.resetAudioPlayerTime();
   }
 
+  public resetPlayerAudio() {
+    this.resetAudioPlayerTime();
+    this.audioPlayer.load();  
+  }
+
   public playAudio() {
     this.audioPlayer.src = this.getAudioSrc();
     this.audioPlayer.load();

@@ -12,7 +12,6 @@ export class QuizComponent implements OnInit {
   public ufList : any = [];
   public listOfLetters : Array<string> = [];
   public currentQuestion : number = 1;
-  private nextQuestionTimeout: any;
   public audioUfSrc : string = '';
   public isMaxQuestion : boolean = false;
   public listOfUsagePerQuestion : Array<QuestionUsage> = [];
@@ -164,12 +163,9 @@ export class QuizComponent implements OnInit {
   public nextQuestion() : void {
     this.currentQuestion++;
     this.audioService.changeSrcAndResetAudioTime(this.listOfLetters[this.currentQuestion - 1]);
-    if (this.nextQuestionTimeout) clearTimeout(this.nextQuestionTimeout);
-
-    this.nextQuestionTimeout = setTimeout(() => {
-      if(!this.audioService.isPlaying) this.audioService.isPlaying = true;
-      this.audioService.playAudio();
-    },1200);
+    if(!this.audioService.isPlaying) this.audioService.isPlaying = true;
+    this.audioService.playAudio();
+    this.audioService.resetAudioPlayerTime();
 
     this.checkQuestionStatus();
     this.setUsageDataItem();
