@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { QuestionUsage, QuestionUsageAudioCount, QuizQuestionList } from 'src/app/interfaces/quiz';
+import { QuizQuestionList } from 'src/app/interfaces/quiz';
 import { AudioService } from 'src/app/services/audio.service';
 import { QuizService } from 'src/app/services/quiz.service';
 
