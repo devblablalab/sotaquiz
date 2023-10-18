@@ -25,6 +25,7 @@ import { AudioPlayerComponent } from './components/audio-player/audio-player.com
 import { AudioVolumeIcon } from './components/icons/normal/audio/volume.component';
 import { AudioPlayIcon } from './components/icons/normal/audio/play.component';
 import { AudioPauseIcon } from './components/icons/normal/audio/pause.component';
+import { HeaderQuizComponent } from './components/header-quiz/header-quiz.component';
 
 
 @NgModule({
@@ -46,7 +47,8 @@ import { AudioPauseIcon } from './components/icons/normal/audio/pause.component'
     AudioPlayerComponent,
     AudioVolumeIcon,
     AudioPlayIcon,
-    AudioPauseIcon
+    AudioPauseIcon,
+    HeaderQuizComponent
   ],
   imports: [
     BrowserModule,
