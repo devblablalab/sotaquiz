@@ -42,14 +42,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   public playAudio() {
-    this.service.audioPlayer.src = this.service.getAudioSrc();
-    this.service.audioPlayer.load();
-    if (this.service.audioPlayer.paused) {
-      this.service.audioPlayer.currentTime = this.service.currentTime;
-    } else {
-      this.service.currentTime = 0;
-    }
-    this.service.audioPlayer.play();
+    this.service.playAudio();
   }
 
   public pauseAudio() {

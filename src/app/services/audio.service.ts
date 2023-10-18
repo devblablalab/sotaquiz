@@ -33,4 +33,15 @@ export class AudioService {
     this.isPlaying = false;
     this.resetAudioPlayerTime();
   }
+
+  public playAudio() {
+    this.audioPlayer.src = this.getAudioSrc();
+    this.audioPlayer.load();
+    if (this.audioPlayer.paused) {
+      this.audioPlayer.currentTime = this.currentTime;
+    } else {
+      this.currentTime = 0;
+    }
+    this.audioPlayer.play();
+  }
 }

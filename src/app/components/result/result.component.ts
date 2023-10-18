@@ -11,7 +11,9 @@ export class ResultComponent implements OnInit {
   public correctAnswers : QuizCorrectQuestions[] | [] = [];
   public ufList : any = [];
   public resultImage : string = "";
+  
   constructor(private service : QuizService) { }
+
 
   async ngOnInit() {
     this.service.protectQuizRoute();
