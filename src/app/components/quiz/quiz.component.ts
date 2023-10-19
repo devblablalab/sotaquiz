@@ -1,7 +1,8 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { QuizQuestionList } from 'src/app/interfaces/quiz';
+import { BackgroundsHeaderQuiz, QuizQuestionList } from 'src/app/interfaces/quiz';
 import { AudioService } from 'src/app/services/audio.service';
+import { ColorService } from 'src/app/services/color.service';
 import { QuizService } from 'src/app/services/quiz.service';
 
 @Component({
@@ -14,15 +15,18 @@ export class QuizComponent implements OnInit {
   public listOfLetters : Array<string> = [];
   public audioUfSrc : string = '';
   public isMaxQuestion : boolean = false;
+  public currentHeaderQuizBg : BackgroundsHeaderQuiz | null = null;
   
   constructor(
     public service : QuizService, 
-    private audioService : AudioService, 
+    private audioService : AudioService,
+    private colorService : ColorService, 
     private elementRef : ElementRef,
     private router : Router
   ) {
     this.listOfLetters = this.service.listOfLetters;
     this.audioService.changeAudioSrc(this.listOfLetters[this.service.currentQuestion - 1]);
+    this.currentHeaderQuizBg = this.colorService.currentHeaderQuizBackgroundColors;
   }
 
   async ngOnInit()  {
