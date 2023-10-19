@@ -18,8 +18,8 @@
     .question-counter {
         position: absolute;
         top: 2.5rem;
-        right: 4.2rem;
-        font-size: 1.6rem;
+        right: 3.2rem;
+        font-size: 1.8rem;
         font-weight: bold;
         color: $primary;
         @media screen and (max-width:767px) {
@@ -29,7 +29,7 @@
         }
         @media screen and (max-width:350px) {
             top: 2rem;
-            right: 1.6rem;
+            right: 1.5rem;
             font-size: 1.2rem;
         }
     }
