@@ -14,7 +14,13 @@
         display: flex;
         align-items: center;
         gap: 3rem;
-        min-height: 20rem;
+        padding-left: 4rem;
+        margin-top: 0.5rem;
+        // min-height: 20rem;
+
+    
+
+   
         .icon-message-container {
             align-self: flex-end;
             padding-left: 1.5rem;
@@ -23,7 +29,7 @@
         }
         @media screen and (max-width:480px) {
             gap: 1.3rem;
-            margin-top: 4.5rem;
+            margin-top: 0.5rem;
             .icon-message-container {
                 padding-left: 1.1rem;
             }

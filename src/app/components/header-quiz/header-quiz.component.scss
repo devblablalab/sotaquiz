@@ -1,3 +1,36 @@
-#header-quiz {
+@import '/src/styles.scss';
+
+.header-quiz-container {
     position: relative;
+    width: 48rem;
+    height: 6rem;
+    @media screen and (max-width:767px) {
+        width: 35rem;
+        height: 5rem;
+    }
+    @media screen and (max-width:350px) {
+        width: 26rem;
+    }
+    #header-quiz {
+        position: absolute;
+        left: 0;
+    }
+    .question-counter {
+        position: absolute;
+        top: 2.5rem;
+        right: 3.2rem;
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: $primary;
+        @media screen and (max-width:767px) {
+            top: 2rem;
+            right: 2.5rem;
+            font-size: 1.4rem;
+        }
+        @media screen and (max-width:350px) {
+            top: 2rem;
+            right: 1.5rem;
+            font-size: 1.2rem;
+        }
+    }
 }
