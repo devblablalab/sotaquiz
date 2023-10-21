@@ -19,3 +19,8 @@ export interface QuestionUsageAudioCount {
     question:number,
     audioCount:number
 }
+
+export interface BackgroundsHeaderQuiz {
+    header: string,
+    slider: string
+}

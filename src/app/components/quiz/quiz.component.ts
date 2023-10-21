@@ -1,7 +1,8 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { QuizQuestionList } from 'src/app/interfaces/quiz';
+import { BackgroundsHeaderQuiz, QuizQuestionList } from 'src/app/interfaces/quiz';
 import { AudioService } from 'src/app/services/audio.service';
+import { ColorService } from 'src/app/services/color.service';
 import { QuizService } from 'src/app/services/quiz.service';
 
 @Component({
@@ -14,10 +15,12 @@ export class QuizComponent implements OnInit {
   public listOfLetters : Array<string> = [];
   public audioUfSrc : string = '';
   public isMaxQuestion : boolean = false;
-  
+  public currentBgQuizColor : string = this.colorService.currentHeaderQuizBackgroundColors;
+
   constructor(
     public service : QuizService, 
-    private audioService : AudioService, 
+    private audioService : AudioService,
+    private colorService : ColorService, 
     private elementRef : ElementRef,
     private router : Router
   ) {
@@ -126,6 +129,7 @@ export class QuizComponent implements OnInit {
 
   public prevQuestion() : void {
     if(this.service.currentQuestion === 1) return;
+    this.currentBgQuizColor = this.colorService.getUniqueHeaderQuizBackgroundColor();
     this.service.currentQuestion--;
     this.audioService.changeSrcAndResetAudioTime(this.listOfLetters[this.service.currentQuestion - 1]);
     this.checkQuestionStatus();
@@ -138,6 +142,8 @@ export class QuizComponent implements OnInit {
     if(!this.audioService.isPlaying) this.audioService.isPlaying = true;
     this.audioService.playAudio();
     this.audioService.resetAudioPlayerTime();
+
+    this.currentBgQuizColor = this.colorService.getUniqueHeaderQuizBackgroundColor();
 
     this.checkQuestionStatus();
     this.setUsageDataItem();
