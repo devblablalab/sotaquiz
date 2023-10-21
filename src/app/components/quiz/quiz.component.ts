@@ -15,8 +15,8 @@ export class QuizComponent implements OnInit {
   public listOfLetters : Array<string> = [];
   public audioUfSrc : string = '';
   public isMaxQuestion : boolean = false;
-  public currentHeaderQuizBg : BackgroundsHeaderQuiz | null = null;
-  
+  public currentBgQuizColor : string = this.colorService.currentHeaderQuizBackgroundColors;
+
   constructor(
     public service : QuizService, 
     private audioService : AudioService,
@@ -26,7 +26,6 @@ export class QuizComponent implements OnInit {
   ) {
     this.listOfLetters = this.service.listOfLetters;
     this.audioService.changeAudioSrc(this.listOfLetters[this.service.currentQuestion - 1]);
-    this.currentHeaderQuizBg = this.colorService.currentHeaderQuizBackgroundColors;
   }
 
   async ngOnInit()  {
@@ -130,6 +129,7 @@ export class QuizComponent implements OnInit {
 
   public prevQuestion() : void {
     if(this.service.currentQuestion === 1) return;
+    this.currentBgQuizColor = this.colorService.getUniqueHeaderQuizBackgroundColor();
     this.service.currentQuestion--;
     this.audioService.changeSrcAndResetAudioTime(this.listOfLetters[this.service.currentQuestion - 1]);
     this.checkQuestionStatus();
@@ -142,6 +142,8 @@ export class QuizComponent implements OnInit {
     if(!this.audioService.isPlaying) this.audioService.isPlaying = true;
     this.audioService.playAudio();
     this.audioService.resetAudioPlayerTime();
+
+    this.currentBgQuizColor = this.colorService.getUniqueHeaderQuizBackgroundColor();
 
     this.checkQuestionStatus();
     this.setUsageDataItem();
