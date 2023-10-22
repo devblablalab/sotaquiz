@@ -105,8 +105,9 @@ export class QuizService {
   public async sendStartQuiz() {
     try {
       const docSnap = await getDocs(query(collection(this.firestore, 'terminationMetric'), where('whoStarted', '>=', 0)));
+      console.log(docSnap)
         if (docSnap.docs.length > 0) {
-          const docRef = doc(this.firestore, 'usageData', docSnap.docs[0].id);
+          const docRef = doc(this.firestore, 'terminationMetric', docSnap.docs[0].id);
           const updateData = { ['whoStarted']: increment(1) };
           await updateDoc(docRef, updateData);
         }
@@ -119,7 +120,7 @@ export class QuizService {
     try {
       const docSnap = await getDocs(query(collection(this.firestore, 'usageData'), where('whoFinished', '>=', 0)));
         if (docSnap.docs.length > 0) {
-          const docRef = doc(this.firestore, 'usageData', docSnap.docs[0].id);
+          const docRef = doc(this.firestore, 'terminationMetric', docSnap.docs[0].id);
           const updateData = { ['whoFinished']: increment(1) };
           await updateDoc(docRef, updateData);
         }
