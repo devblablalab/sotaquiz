@@ -120,7 +120,6 @@ export class QuizService {
       const docSnap = await getDocs(query(collection(this.firestore, 'terminationMetric'), where('whoFinished', '>=', 0)));
         if (docSnap.docs.length > 0) {
           const docRef = doc(this.firestore, 'terminationMetric', docSnap.docs[0].id);
-          console.log(docRef)
           const updateData = { ['whoFinished']: increment(1) };
           await updateDoc(docRef, updateData);
         }
