@@ -105,7 +105,6 @@ export class QuizService {
   public async sendStartQuiz() {
     try {
       const docSnap = await getDocs(query(collection(this.firestore, 'terminationMetric'), where('whoStarted', '>=', 0)));
-      console.log(docSnap)
         if (docSnap.docs.length > 0) {
           const docRef = doc(this.firestore, 'terminationMetric', docSnap.docs[0].id);
           const updateData = { ['whoStarted']: increment(1) };
