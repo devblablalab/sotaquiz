@@ -39,6 +39,11 @@ export class AudioService {
     this.audioPlayer.load();  
   }
 
+  public pauseAudio() {
+    this.currentTime = this.audioPlayer.currentTime;
+    this.audioPlayer.pause();
+  }
+
   public playAudio() {
     this.audioPlayer.src = this.getAudioSrc();
     this.audioPlayer.load();
@@ -48,5 +53,9 @@ export class AudioService {
       this.currentTime = 0;
     }
     this.audioPlayer.play();
+  }
+
+  public triggerAudioEndedListener(callback : Function) {
+    this.audioPlayer.addEventListener('ended', () => callback());
   }
 }

@@ -7,11 +7,30 @@
         color: $warning;
         margin-top: .9rem;
     }
+
     .correct-uf {
         background: $success;
         color: $dark;
         font-weight: 600;
     }
+
+    .active-play-uf,
+    .correct-uf.active-play-uf  {
+        font-weight: 600;
+        color: $dark;
+        background-color: $light;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' x='0px' y='0px' viewBox='0 0 100 100' style='enable-background:new 0 0 100 100;transform:scale(.5);' xml:space='preserve' width='15' height='15'%3E%3Cg%3E%3Cpath d='M6.33,64.09h24.51V35.94H6.33c-1.56,0-2.83,1.27-2.83,2.83v22.48C3.5,62.82,4.77,64.09,6.33,64.09z'/%3E%3Cpath d='M24.61,35.94v28.15l16.48,17.92c1.61,1.75,4.52,0.61,4.52-1.76V19.79c0-2.37-2.92-3.51-4.52-1.76L24.61,35.94z'/%3E%3Cpath d='M59.19,31.46c3.06,5.66,4.68,12.07,4.68,18.56c0,6.48-1.62,12.9-4.68,18.56L67.36,73c3.79-7.01,5.8-14.96,5.8-22.98 c0-8.02-2-15.97-5.8-22.98L59.19,31.46z'/%3E%3Cpath d='M85.9,14.55l-8.18,4.42c5.12,9.46,7.83,20.2,7.83,31.05c0,10.85-2.71,21.58-7.83,31.05l8.18,4.42 c5.85-10.82,8.95-23.08,8.95-35.47C94.85,37.63,91.75,25.36,85.9,14.55z'/%3E%3C/g%3E%3C/svg%3E");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        @media screen and (max-width:767px) {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' x='0px' y='0px' viewBox='0 0 100 100' style='enable-background:new 0 0 100 100;transform:scale(.3);' xml:space='preserve' width='10' height='10'%3E%3Cg%3E%3Cpath d='M6.33,64.09h24.51V35.94H6.33c-1.56,0-2.83,1.27-2.83,2.83v22.48C3.5,62.82,4.77,64.09,6.33,64.09z'/%3E%3Cpath d='M24.61,35.94v28.15l16.48,17.92c1.61,1.75,4.52,0.61,4.52-1.76V19.79c0-2.37-2.92-3.51-4.52-1.76L24.61,35.94z'/%3E%3Cpath d='M59.19,31.46c3.06,5.66,4.68,12.07,4.68,18.56c0,6.48-1.62,12.9-4.68,18.56L67.36,73c3.79-7.01,5.8-14.96,5.8-22.98 c0-8.02-2-15.97-5.8-22.98L59.19,31.46z'/%3E%3Cpath d='M85.9,14.55l-8.18,4.42c5.12,9.46,7.83,20.2,7.83,31.05c0,10.85-2.71,21.58-7.83,31.05l8.18,4.42 c5.85-10.82,8.95-23.08,8.95-35.47C94.85,37.63,91.75,25.36,85.9,14.55z'/%3E%3C/g%3E%3C/svg%3E"); 
+        }
+        span {
+            visibility: hidden;
+            height: 0;
+        }
+    }   
 
     .text-question {
         font-size: 1.8rem;

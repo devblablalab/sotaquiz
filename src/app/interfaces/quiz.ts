@@ -3,9 +3,15 @@ export interface QuizQuestionList {
     answerValue: string,
     isCorrect: boolean,
 }
+
 export interface QuizCorrectQuestions {
     answerValue: string | undefined, 
     isCorrect: boolean
+}
+
+export interface QuizQuestions {
+    audioLetter: string, 
+    correctValue: string
 }
 
 export interface QuestionUsage {

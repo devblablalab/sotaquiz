@@ -18,11 +18,16 @@
             <i-user-bordered-bold iconFillColor="#3F3F3F"></i-user-bordered-bold>
         </div> -->
     </div>
-    <p class="title-muted">Suas respostas certas:</p>
+    <p class="main-title-light fw-500">Suas respostas certas:</p>
+    <p class="title-muted">Clique nas siglas para ouvir os áudios.</p>
     <div class="ufs my-2">
-        <button *ngFor="let uf of ufList" class="btn-default text-light border-light bg-none" [class.correct-uf]="checkUfItemIsCorrect(uf)" 
+        <button (click)="handleAudioCurrentUf($event)" 
+        *ngFor="let uf of ufList" 
+        [attr.data-letter]="getLetterByUf(uf)"
+        class="btn-default text-light border-light bg-none" 
+        [class.correct-uf]="checkUfItemIsCorrect(uf)" 
         type="button">
-            {{ uf }}
+            <span>{{ uf }}</span>
         </button>
     </div>
 </div>

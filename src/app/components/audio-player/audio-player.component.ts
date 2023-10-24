@@ -46,8 +46,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
   }
 
   public pauseAudio() {
-    this.service.currentTime = this.service.audioPlayer.currentTime;
-    this.service.audioPlayer.pause();
+    this.service.pauseAudio();
   }
 
   public seekTo(e: Event) {
@@ -56,7 +55,7 @@ export class AudioPlayerComponent implements OnInit, OnDestroy {
       const seekTime = (Number(currentTarget.value) / 100) * this.service.audioPlayer.duration;
       this.service.audioPlayer.currentTime = seekTime;
     }
-  }
+  } 
 
   public setVolume(e: Event) {
     const { currentTarget } = e;

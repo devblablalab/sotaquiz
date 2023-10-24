@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { QuizCorrectQuestions } from 'src/app/interfaces/quiz';
+import { Component, OnInit, Renderer2, ElementRef } from '@angular/core';
+import { QuizCorrectQuestions, QuizQuestions } from 'src/app/interfaces/quiz';
+import { AudioService } from 'src/app/services/audio.service';
 import { QuizService } from 'src/app/services/quiz.service';
 
 @Component({
@@ -8,11 +9,18 @@ import { QuizService } from 'src/app/services/quiz.service';
   styleUrls: ['./result.component.scss']
 })
 export class ResultComponent implements OnInit {
+  public questionAnswers : QuizQuestions[] = [];
   public correctAnswers : QuizCorrectQuestions[] | [] = [];
   public ufList : any = [];
   public resultImage : string = "";
+  public ufButtons : HTMLButtonElement[] = [];
   
-  constructor(private service : QuizService) { }
+  constructor(
+    private service : QuizService, 
+    private audioService : AudioService, 
+    private elementRef : ElementRef,
+    private renderer : Renderer2
+    ) { }
 
 
   async ngOnInit() {
@@ -20,6 +28,12 @@ export class ResultComponent implements OnInit {
     this.ufList = await this.service.setDataUfs();
     this.correctAnswers = this.service.getCorrectAnswers();
     this.resultImage = this.getResultImage();
+    this.questionAnswers = await this.service.getQuestionsAnswers();
+    this.ufButtons = this.elementRef.nativeElement.querySelectorAll('.ufs button');
+  }
+
+  public getLetterByUf(uf : string) {
+    return this.questionAnswers.find(answer => answer.correctValue === uf.toLowerCase())?.audioLetter;
   }
 
   public checkUfItemIsCorrect(uf : string) {
@@ -33,6 +47,29 @@ export class ResultComponent implements OnInit {
       return "/assets/shapes/medium-result.svg";
     } else {
       return "/assets/shapes/good-result.svg";
+    }
+  }
+
+  public removeAllActiveAudioBtnsUf(currentTarget : HTMLButtonElement) {
+    console.log(this.ufButtons);
+    this.ufButtons?.forEach((button : HTMLButtonElement) => {
+      if (button !== currentTarget) this.renderer.removeClass(button, 'active-play-uf');
+    });
+  }
+
+  public handleAudioCurrentUf(e : Event) {
+    const currentTarget = e.currentTarget as HTMLButtonElement;
+    this.removeAllActiveAudioBtnsUf(currentTarget);
+
+    currentTarget.classList.toggle('active-play-uf');
+    const currentLetter = currentTarget.dataset['letter'];
+    if(currentTarget.classList.contains('active-play-uf')) {
+      this.audioService.changeAudioSrc(currentLetter!);
+      this.audioService.playAudio();
+      this.audioService.triggerAudioEndedListener(() => currentTarget.classList.remove('active-play-uf'));
+    } else {
+      this.audioService.resetPlayerAudio();
+      this.audioService.pauseAudio();
     }
   }
 }
