@@ -20,7 +20,11 @@
     </div>
     <p class="title-muted">Suas respostas certas:</p>
     <div class="ufs my-2">
-        <button *ngFor="let uf of ufList" class="btn-default text-light border-light bg-none" [class.correct-uf]="checkUfItemIsCorrect(uf)" 
+        <button (click)="handleAudioCurrentUf($event)" 
+        *ngFor="let uf of ufList" 
+        [attr.data-letter]="getLetterByUf(uf)"
+        class="btn-default text-light border-light bg-none" 
+        [class.correct-uf]="checkUfItemIsCorrect(uf)" 
         type="button">
             {{ uf }}
         </button>
