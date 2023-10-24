@@ -24,7 +24,7 @@ export class ResultComponent implements OnInit {
 
 
   async ngOnInit() {
-    // this.service.protectQuizRoute();
+    this.service.protectQuizRoute();
     this.ufList = await this.service.setDataUfs();
     this.correctAnswers = this.service.getCorrectAnswers();
     this.questionAnswers = await this.service.getQuestionsAnswers();
