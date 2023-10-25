@@ -27,6 +27,7 @@ export class ResultComponent implements OnInit {
     this.service.protectQuizRoute();
     this.ufList = await this.service.setDataUfs();
     this.correctAnswers = this.service.getCorrectAnswers();
+    this.resultImage = this.getResultImage();
     this.questionAnswers = await this.service.getQuestionsAnswers();
     this.ufButtons = this.elementRef.nativeElement.querySelectorAll('.ufs button');
   }
