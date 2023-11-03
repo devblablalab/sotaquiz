@@ -6,11 +6,13 @@ import { ConfirmQuizComponent } from '../components/confirm-quiz/confirm-quiz.co
 import { ResultComponent } from '../components/result/result.component';
 
 const appRoutes : Routes = [
- { path: '', pathMatch:'full', redirectTo:'home' },
+//  { path: '', pathMatch:'full', redirectTo:'home' },
+ { path: '', component: HomeComponent },
  { path: 'home', component: HomeComponent},
  { path: 'quiz', component: QuizComponent},
  { path: 'confirm-quiz', component: ConfirmQuizComponent},
  { path: 'result', component: ResultComponent},
+ { path: '**', redirectTo: 'home' }
 ];
 
 @NgModule({
